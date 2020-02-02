@@ -12,6 +12,8 @@ library(sem)
 library(semtree)
 library(semPlot)
 library(tidyverse)
+
+set.seed(88)
 ```
 
 Model that will be experimented with:
@@ -44,4 +46,55 @@ mi_all <- mi
 
 # mi_cv <- 
 ```
+
+Looking into using cross-validation in the HS dataset:
+Starting with a training-test-split
+```{r}
+HS <- HolzingerSwineford1939
+# There are 301 observations. Let's use a 70 - 30 split. 211 train, 90 test.
+HS <- HS %>% 
+  mutate(split = rep(c("train", "test"), times = c(211, 90)))
+
+trainHS <- HS %>% 
+  filter(split == "train") %>% 
+  select(-split)
+
+testHS <- HS %>% 
+  filter(split == "test") %>% 
+  select(-split)
+```
+
+Making a model with the training set:
+```{r}
+fit_train <- lavaan::cfa(model, trainHS)
+```
+
+Getting the MI's
+```{r}
+mi_train <- modindices(fit_train)
+```
+
+Fitting the model to the test set to find a "baseline" chi-square model fit statistic. The idea is that this baseline is used so that the effect of subsequent changes to the model on the chi-square value can be compared. If the fit worsens in the test set, then there is a suggestion that the model is starting to overfit on the training set.
+
+So, let's see, how does one find model fit on a set of observations which is not used to make the model...
+```{r}
+# Ah, you actually do the same thing as before:
+fit_test_baseline <- lavaan::cfa(model, testHS)
+summary(fit_test_baseline, standardized = TRUE)
+```
+
+Ok, now that we have a baseline chi-square statistic of the model fit in the test set we have something compare a new model fit value to.
+
+So, we can start making some modifications to the model based on modification indices.
+
+
+
+
+
+
+
+
+
+
+
 
