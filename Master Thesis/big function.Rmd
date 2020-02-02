@@ -1,0 +1,16 @@
+---
+title: "big function"
+author: "Pascal van Luit"
+date: "2 February 2020"
+output: html_document
+---
+
+```{r}
+mi_cv <- function(baseline.model, min.mi, split){
+  
+}
+  
+```
+
+Things to add:
+  - folds

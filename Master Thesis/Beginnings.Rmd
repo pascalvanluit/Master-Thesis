@@ -86,7 +86,13 @@ summary(fit_test_baseline, standardized = TRUE)
 Ok, now that we have a baseline chi-square statistic of the model fit in the test set we have something compare a new model fit value to.
 
 So, we can start making some modifications to the model based on modification indices.
+```{r}
+mi_train_max <- mi_train[order(-mi_train$mi),]
 
+head(mi_train_max)
+```
+
+The mi values of the training data suggest that adding "visual =~ x5" would improve model fit.
 
 
 
