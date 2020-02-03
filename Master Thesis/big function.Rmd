@@ -5,6 +5,11 @@ date: "2 February 2020"
 output: html_document
 ---
 
+Arguments;
+- baseline.model: the base line which is defined in lavaan syntax.
+- min.mi: minimum modification index value for considering a model modification.
+- split: percentage of observations placed in the training set.
+
 ```{r}
 mi_cv <- function(baseline.model, min.mi, split){
   
