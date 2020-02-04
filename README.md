@@ -4,4 +4,6 @@ This repo contains various files of preparatory work for my master thesis about 
 
 The ESS Wave 6 is an attempt at replicating a study.
 
-The lavaan tutorial is me following the tutorial for using the lavaan package in R.
+The Lavaan tutorial is me following the tutorial for using the lavaan package in R.
+
+The Master Thesis folder contains code for my CV SEM method.
