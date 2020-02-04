@@ -67,7 +67,9 @@ testHS <- HS %>%
 Making a model with the training set:
 ```{r}
 fit_train <- lavaan::cfa(model, trainHS)
+summary(fit_train, standardized = TRUE)
 ```
+Chi-square = 24.581 (p = 0.002)
 
 Getting the MI's
 ```{r}
@@ -83,6 +85,8 @@ fit_test_baseline <- lavaan::cfa(model, testHS)
 summary(fit_test_baseline, standardized = TRUE)
 ```
 
+Chi-square is 4.757
+
 Ok, now that we have a baseline chi-square statistic of the model fit in the test set we have something compare a new model fit value to.
 
 So, we can start making some modifications to the model based on modification indices.
@@ -92,8 +96,28 @@ mi_train_max <- mi_train[order(-mi_train$mi),]
 head(mi_train_max)
 ```
 
-The mi values of the training data suggest that adding "visual =~ x5" would improve model fit.
+The mi values of the training data suggest that adding "visual =~ x5" would improve model fit. So let's add it.
 
+```{r}
+new_model_one <- " visual =~ x1 + x2 + x3 +x5
+                   textual =~ x4 + x5 + x6 "
+
+fit_train_one <- lavaan::cfa(new_model_one, trainHS)
+
+summary(fit_train_one, standardized = TRUE)
+
+```
+
+New chi-square value is 13.308 (p = 0.065)
+
+Let's see if this modification also improves model fit in the test set:
+```{r}
+fit_test_one <- lavaan::cfa(new_model_one, testHS)
+
+summary(fit_test_one)
+```
+
+The new chi-square value is 4.727 (p = 0.693)
 
 
 

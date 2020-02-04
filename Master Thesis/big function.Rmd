@@ -8,14 +8,39 @@ output: html_document
 Arguments;
 - baseline.model: the base line which is defined in lavaan syntax.
 - min.mi: minimum modification index value for considering a model modification.
+- data: dataset on which the model is fit.
 - split: percentage of observations placed in the training set.
 
 ```{r}
-mi_cv <- function(baseline.model, min.mi, split){
+mi_cv <- function(baseline.model, min.mi, data, split){
+  # Adding a column to the dataset to allow a train-validation split:
+  data <- data %>% 
+           mutate(split = rep(c("train", "test"),
+                               times = c(round(split * nrow(data)), round((1 - split) * nrow(data)))))
   
+  # Making a separate training set:
+  train <- data %>%
+            filter(split == "train") %>% 
+            select(-split)
+  
+  test <- data %>%
+            filter(split == "test") %>% 
+            select(-split)
+  
+  # Fitting the baseline model to the training set:
+  # fit <- lavaan::cfa(baseline.model, train)
 }
   
 ```
+
+
+Testing out function mi_cv:
+```{r}
+test <- mi_cv(data = HolzingerSwineford1939, split = 0.7)
+View(test)
+```
+
+
 
 Things to add:
   - folds
