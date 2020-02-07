@@ -20,8 +20,22 @@ Model that will be experimented with:
 ```{r}
 model <- " visual =~ x1 + x2 + x3
            textual =~ x4 + x5 + x6 "
+# model_add <- " visual =~ x5 "
+
+# final_model <- c(model, model_add)
 
 fit <-lavaan:::cfa(model, HolzingerSwineford1939)
+
+fits <- fitmeasures(fit)
+
+mat <- matrix()
+
+mat$chi.square.test   <- fits["chisq"]
+mat$p.value.test      <- fits["pvalue"]
+mat$df           <- fits["df"]
+
+mat
+summary(fit)
 ```
 
 Checking the diagram
@@ -99,12 +113,14 @@ head(mi_train_max)
 The mi values of the training data suggest that adding "visual =~ x5" would improve model fit. So let's add it.
 
 ```{r}
-new_model_one <- " visual =~ x1 + x2 + x3 +x5
+new_model_one <- " visual =~ x1 + x2 + x3 + x5
                    textual =~ x4 + x5 + x6 "
 
 fit_train_one <- lavaan::cfa(new_model_one, trainHS)
 
-summary(fit_train_one, standardized = TRUE)
+semPaths(fit_train_one)
+
+#summary(fit_train_one, standardized = TRUE)
 
 ```
 
@@ -119,7 +135,16 @@ summary(fit_test_one)
 
 The new chi-square value is 4.727 (p = 0.693)
 
+How to extract values from fit summary?
+Namely: Chi-square value and p-value
+```{r}
+summary <- summary(fit)
 
+fit
+summary
+
+summary$PE
+```
 
 
 

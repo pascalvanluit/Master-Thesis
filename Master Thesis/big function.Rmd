@@ -28,25 +28,36 @@ mi_cv <- function(baseline.model, min.mi, data, split){
             select(-split)
   
   # Fitting the baseline model to the training set:
-  fit_train <- lavaan::cfa(baseline.model, train)
+  fit.train <- lavaan::cfa(baseline.model, train)
+  
+    # Fitting the baseline model to the test set to obtain a baseline estimate of chi-square model fit:
+    fit.test <- lavaan::cfa(baseline.model, test)
+    
+      # Obtaining the chi-square value, p-value and degrees of freedom:
+      fit.measures.test <- summary(fit.test)
+      chi.square.test   <- fit.measures.test["chisq"]
+      p.value.test      <- fit.measures.test["pvalue"]
+      df.test           <- fit.measures.test["df"]
   
   # Obtaining the MIs:
-  mi_train <- lavaan::modindices(fit_train)
+  mi.train <- lavaan::modindices(fit.train)
   
     # Ordering the MIs from largest to smallest:
-    mi_train <- mi_train[order(-mi_train$mi), ]
+    mi.train <- mi.train[order(-mi.train$mi), ]
     
     # Taking only the relevant columns:
-    mi_train <- mi_train[, 1:4]
+    mi.train <- mi.train[, 1:4]
     
       # Extracting the first row from those relevant columns:
-      lhs <- mi_train[1, 1]
-      op  <- mi_train[1, 2]
-      rhs <- mi_train[1, 3]
+      lhs <- mi.train[1, 1]
+      op  <- mi.train[1, 2]
+      rhs <- mi.train[1, 3]
       
     # Adding the first modification to the model:
-    
-    
+      ############################
+      # No idea how to do this yet..........................
+      ############################
+      
     # return for checking:
     return(mi_train)
 }
