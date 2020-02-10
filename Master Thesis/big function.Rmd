@@ -15,6 +15,16 @@ set.seed(88)
 ```
 
 
+Function to perform Model Modifications according to MI > 10.
+```{r}
+
+```
+
+
+
+
+
+
 
 Arguments;
 - baseline.model: the base line which is defined in lavaan syntax.
@@ -67,22 +77,31 @@ mi_cv <- function(baseline.model, min.mi, data, split){
       op  <- mi.train[1, 2]
       rhs <- mi.train[1, 3]
       
+      # The first modification to be added to the model:
+      mod1 <- paste(lhs, op, rhs, sep = " ")
+      
     # Adding the first modification to the model:
       ############################
       # No idea how to do this yet..........................
       # Need to find out a way to add a line of text to the text object
+      # USE PASTE
       ############################
+      new.model <- paste(baseline.model, mod1, sep = "
+                         ")
     
     
     # After adding a modification to the model, the model fit on the test set must be obtained and compared to the previous model fit on the test set. This, to check if there is an improvement
-      
+    fit.test.mod <- lavaan::cfa(new.model, test)  
+    sum.fit.test.mod <- summary(fit.test.mod)
     
+    # Checking the model diagram with the modification:
+    # diagram <- semPaths(fit.test.mod, title = FALSE, curvepivot = TRUE)
       
       
         
     # return for checking:
     #return(test.baseline.mat)
-    return(mi.train)
+    return(diagram)
 }
   
 ```
