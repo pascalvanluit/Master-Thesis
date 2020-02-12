@@ -60,20 +60,6 @@ mi_10 <- function(baseline.model, mi = 10, data){
 }
 ```
 
-Above function with for loop:
-```{r}
-mi_10_forloop <- function(baseline.model, mi = 10, data){
-  
-  # Fitting the baseline model:
-  fit1 <- lavaan::cfa(baseline.model, data)
-  
-  # For loop for adding modifications
-  for (i in 1:mods) {
-    MIs[i] <- lavaan::modindices(fit[i])
-    
-  }
-}
-```
 
 mi_10 function with while loop:
 ```{r}
