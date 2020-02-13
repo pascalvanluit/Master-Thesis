@@ -5,15 +5,22 @@ date: "13 February 2020"
 output: html_document
 ---
 
-Exploring the use of the cSEM.DGP package
+## Exploring the use of the cSEM.DGP package
 
+Installing cSEM and cSEM.DGP packages:
+- cSEM pack
 ```{r}
+library(lavaan)
 library(devtools)
 
-# install.packages("devtools")
 devtools::install_github("M-E-Rademaker/cSEM")
 
-# install.packages("devtools")
 devtools::install_github("M-E-Rademaker/cSEM.DGP")
+```
+
+Specifying the DGP Model
+```{r}
+DGP.model <- " f1 =~ x1 + x2 + x3 + x4
+               f2 =~ x4 + x5 + x6 "
 ```
 
