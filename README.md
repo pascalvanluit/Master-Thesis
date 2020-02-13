@@ -1,6 +1,6 @@
 # Master-Thesis
 
-This repo contains various files of preparatory work for my master thesis about Improving Generalizability of Structural Equation Models through Cross-Validated Model Modiﬁcations.
+This repo contains various files of preparatory work for my master thesis about **Improving Generalizability of Structural Equation Models through Cross-Validated Model Modiﬁcations**.
 
 The ESS Wave 6 is an attempt at replicating a study.
 
