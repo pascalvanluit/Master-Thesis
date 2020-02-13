@@ -102,6 +102,12 @@ modindices(mod.fit) %>%
 ```
 
 
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+
 
 ## mi_cv function
 Arguments;
@@ -132,14 +138,23 @@ mi_cv <- function(baseline.model, min.mi, data, split){
     # Fitting the baseline model to the test set to obtain a baseline estimate of chi-square model fit:
     fit.test <- lavaan::cfa(baseline.model, test)
     
-      #A matrix to store the baseline values of model fit in test set:
-      test.baseline.mat <- matrix()
+      # Baseline values in test set:
+      fit.measures.test <- fitmeasures(fit.test)
+      
+      test.baseline <- c(fit.measures.test["chisq"],
+                         fit.measures.test["pvalue"],
+                         fit.measures.test["df"])
     
-      # Obtaining the chi-square value, p-value and degrees of freedom:
-      fit.measures.test         <- fitmeasures(fit.test)
-      test.baseline.mat$chisq   <- fit.measures.test["chisq"]
-      test.baseline.mat$pvalue  <- fit.measures.test["pvalue"]
-      test.baseline.mat$df      <- fit.measures.test["df"]
+    
+    
+      # # A matrix to store the baseline values of model fit in test set:
+      # test.baseline.mat <- matrix()
+      # 
+      # # Obtaining the chi-square value, p-value and degrees of freedom:
+      # fit.measures.test         <- fitmeasures(fit.test)
+      # test.baseline.mat$chisq   <- fit.measures.test["chisq"]
+      # test.baseline.mat$pvalue  <- fit.measures.test["pvalue"]
+      # test.baseline.mat$df      <- fit.measures.test["df"]
   
   # Obtaining the MIs:
   mi.train <- lavaan::modindices(fit.train)
@@ -159,11 +174,6 @@ mi_cv <- function(baseline.model, min.mi, data, split){
       mod1 <- paste(lhs, op, rhs, sep = " ")
       
     # Adding the first modification to the model:
-      ############################
-      # No idea how to do this yet..........................
-      # Need to find out a way to add a line of text to the text object
-      # USE PASTE
-      ############################
       new.model <- paste(baseline.model, mod1, sep = "
                          ")
     
@@ -178,8 +188,7 @@ mi_cv <- function(baseline.model, min.mi, data, split){
       
         
     # return for checking:
-    #return(test.baseline.mat)
-    return(diagram)
+    return(test.baseline)
 }
   
 ```

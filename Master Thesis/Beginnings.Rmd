@@ -28,6 +28,10 @@ fit <-lavaan:::cfa(model, HolzingerSwineford1939)
 
 fits <- fitmeasures(fit)
 
+test.baseline <- fitmeasures(fit) %>% 
+        select(chisq, pvalue, df)
+test.baseline
+
 mat <- matrix()
 
 mat$chi.square.test   <- fits["chisq"]
