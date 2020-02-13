@@ -149,12 +149,11 @@ mi_cv <- function(baseline.model, min.mi, data, split){
   
   # Obtaining the MIs:
   mi.train <- lavaan::modindices(fit.train)
-  
-    # Ordering the MIs from largest to smallest:
-    mi.train <- mi.train[order(-mi.train$mi), ]
     
     # Taking only the relevant columns:
-    mi.train <- mi.train[, 1:4]
+    mi.train <- mi.train %>%
+      arrange(-mi) %>% 
+      select(lhs, op, rhs, mi)
     
       # Extracting the first row from those relevant columns:
       lhs <- mi.train[1, 1]
@@ -190,7 +189,6 @@ Testing out function mi_cv:
 test <- mi_cv(baseline.model = model, data = HolzingerSwineford1939, split = 0.7)
 
 test
-
 ```
 
 

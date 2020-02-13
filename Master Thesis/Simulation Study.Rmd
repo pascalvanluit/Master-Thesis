@@ -1,0 +1,19 @@
+---
+title: "Simulation Study"
+author: "Pascal van Luit"
+date: "13 February 2020"
+output: html_document
+---
+
+Exploring the use of the cSEM.DGP package
+
+```{r}
+library(devtools)
+
+# install.packages("devtools")
+devtools::install_github("M-E-Rademaker/cSEM")
+
+# install.packages("devtools")
+devtools::install_github("M-E-Rademaker/cSEM.DGP")
+```
+
