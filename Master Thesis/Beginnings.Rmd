@@ -26,24 +26,33 @@ model <- " visual =~ x1 + x2 + x3
 
 fit <-lavaan:::cfa(model, HolzingerSwineford1939)
 
+fit.measures <- fitmeasures(fit)
+      
+baseline <- data.frame(chisq  = fit.measures["chisq"],
+                       pvalue = fit.measures["pvalue"],
+                       df     = fit.measures["df"])
 
-test.baseline <- fitmeasures(fit) %>% 
-        select(chisq, pvalue, df)
-test.baseline
 
-mat <- matrix()
+# test.baseline <- fitmeasures(fit) %>% 
+#         select(chisq, pvalue, df)
+# test.baseline
 
-mat$chi.square.test   <- fits["chisq"]
-mat$p.value.test      <- fits["pvalue"]
-mat$df           <- fits["df"]
+# mat <- matrix()
+# 
+# mat$chi.square.test   <- fits["chisq"]
+# mat$p.value.test      <- fits["pvalue"]
+# mat$df           <- fits["df"]
+# 
+# mat
+# summary(fit)
 
-mat
-summary(fit)
+baseline
+
 ```
 
 Checking the diagram
 ```{r}
-semPaths(fit, title = FALSE, curvepivot = TRUE)
+semPaths(fit, "std", "est", title = FALSE, curvepivot = TRUE)
 ```
 
 Extracting modification indices from model:
