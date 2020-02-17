@@ -87,6 +87,8 @@ cov(myData)
 
 Can data from my model be simulated using lavaan::simulateData?
 ```{r}
+set.seed(88)
+
 lambda <- 0.7
 delta  <- 0.4
 rho    <- 0.8
@@ -100,8 +102,6 @@ DGP.model <- "
     f2 =~ lambda*x4 + lambda*x5 + lambda*x6 "
 
 DGP.data <- lavaan::simulateData(model = DGP.model)
-
-head(DGP.data)
 
 cor(DGP.data)
 
