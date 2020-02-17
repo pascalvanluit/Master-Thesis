@@ -47,16 +47,21 @@ DGP.model.2 <- "
     f1 ~ rho*f2
 
     # Measurement model
-    f1 =~ lambda * x1 + lambda * x2 + lambda * x3 + delta * x4
-    f2 =~ lambda * x4 + lambda * x5 + lambda * x6 "
+    f1 =~ lambda*x1 + lambda*x2 + lambda*x3
+    f2 =~ lambda*x4 + lambda*x5 + lambda*x6 "
 
 DGP.data <- cSEM.DGP::generateData(DGP.model.2, .return_type = "cor",
                                    lambda = c(0.2, 0.5, 0.8),
                                    delta  = c(0.2, 0.5, 0.8),
                                    rho    = c(0.2, 0.5, 0.8),
-                                   .handle_negative_definite = "set_NA")
-```
+                                   .handle_negative_definite = "set_NA"
+                                   )
 
+DGP.data
+
+DGP.data$dgp[[8]]
+```
+Problem: Cannot have one indicator be connected to several constructs.
 
 
 
