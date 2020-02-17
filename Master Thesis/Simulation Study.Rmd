@@ -50,7 +50,7 @@ DGP.model.2 <- "
     f1 =~ lambda*x1 + lambda*x2 + lambda*x3 # + delta*x4
     f2 =~ lambda*x4 + lambda*x5 + lambda*x6 "
 
-DGP.data <- cSEM.DGP::generateData(DGP.model.2, .return_type = "cor",
+DGP.data.2 <- cSEM.DGP::generateData(DGP.model.2, .return_type = "cor",
                                    lambda = c(0.2, 0.5, 0.8),
                                    delta  = c(0.2, 0.5, 0.8),
                                    rho    = c(0.2, 0.5, 0.8),
@@ -84,4 +84,30 @@ head(myData)
 cov(myData)
 
 ```
+
+Can data from my model be simulated using lavaan::simulateData?
+```{r}
+lambda <- 0.7
+delta  <- 0.4
+rho    <- 0.8
+
+DGP.model <- " 
+    # Structural model
+    f1 ~ rho*f2
+
+    # Measurement model
+    f1 =~ lambda*x1 + lambda*x2 + lambda*x3 + delta*x4
+    f2 =~ lambda*x4 + lambda*x5 + lambda*x6 "
+
+DGP.data <- lavaan::simulateData(model = DGP.model)
+
+head(DGP.data)
+
+cor(DGP.data)
+
+```
+
+
+
+
 
