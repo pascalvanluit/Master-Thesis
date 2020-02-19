@@ -47,11 +47,12 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
     # Extracting the restricted parameter with the largest MI value:
     largest.mi <- MIs[1, ]
     
+    # Specifying a modification to be added to the model:
     mod <- paste(largest.mi[1, 1], largest.mi[1, 2], largest.mi[1, 3], sep = " ")
-  
+
+## Starting the while loop:  
   while(largest.mi[1, 4] > min.mi) {
     
-
     # Extracting the modification to be added to the model:
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
 
@@ -133,17 +134,32 @@ mi_cv <- function(baseline.model, min.mi, data, split, ...){
   # Saving baseline model as model:
   model <- baseline.model
   
-  # Fitting the baseline model to the training set:
+
+## Fitting the baseline model to the training set:
   fit.train <- lavaan::cfa(model, train, ...)
   
-  # Fitting the baseline model to the test set to obtain a baseline estimate of chi-square model fit:
+  # Obtaining MI values according to the training set:
+  MIs <- lavaan::modindices(fit.train)
+  
+  # Wrangling the MIs:
+  MIs <- MIs %>%
+    arrange(-mi) %>% 
+    select(lhs, op, rhs, mi)
+  
+  # Extracting the restriced parameter with the largest MI value:
+  largest.mi  <- MIs[1, ]
+  
+  # Specifying a modification to be added to the model:
+  mod <- paste(largest.mi[1, 1], largest.mi[1, 2], largest.mi[1, 3], sep = " ")
+
+## Fitting the baseline model to the test set:
   fit.test <- lavaan::cfa(baseline.model, test, ...)
     
-      # Saving the baseline values in test set:
-      # - these values are to be used to assess if there is an improvement in fit in the test set when a modification is added.
-      fit.measures.test <- fitmeasures(fit.test)
+  # Saving the baseline values in test set:
+  # - these values are to be used to assess if there is an improvement in fit in the test set when a modification is added.
+  fit.measures.test <- fitmeasures(fit.test)
       
-      test.baseline <- data.frame(test.chisq.baseline  = fit.measures.test["chisq"],
+  test.baseline <- data.frame(test.chisq.baseline  = fit.measures.test["chisq"],
                                   test.pvalue = fit.measures.test["pvalue"],
                                   test.df     = fit.measures.test["df"])
     
@@ -151,7 +167,15 @@ mi_cv <- function(baseline.model, min.mi, data, split, ...){
   # WHILE FUNCTTION #
   ###################
   while(mod.fit.measures.test$mod.test.chisq < test.chisq.baseline && test.pvalue < 0.5 && test.df >= 0){
+
+    # Extracting a modification to be added to the model:
     
+    
+    
+    
+    
+    
+        
     # Update the model:
     model <- model
     
@@ -239,6 +263,23 @@ Testing out function mi_cv:
 test <- mi_cv(baseline.model = model, data = HolzingerSwineford1939, split = 0.7)
 
 test
+```
+
+Looking at the chi-square difference test:
+```{r}
+HS.model <- '
+    visual  =~ x1 + b1*x2 + x3
+    textual =~ x4 + b2*x5 + x6
+    speed   =~ x7 + b3*x8 + x9
+'
+fit1 <- cfa(HS.model, data = HolzingerSwineford1939)
+fit0 <- cfa(HS.model, data = HolzingerSwineford1939, 
+            orthogonal = TRUE)
+
+difftest <- lavTestLRT(fit1, fit0)
+
+difftest
+difftest$`Pr(>Chisq)`
 ```
 
 
