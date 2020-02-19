@@ -71,8 +71,7 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data){
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
 
     # Adding the modification to the model:
-    model <- paste(model, mod, sep = "
-                     ")
+    model <- paste(model, mod, sep = "\n")
       
     print(model)
   }
@@ -117,7 +116,7 @@ Arguments;
 - split: percentage of observations placed in the training set.
 
 ```{r}
-mi_cv <- function(baseline.model, min.mi, data, split){
+mi_cv <- function(baseline.model, min.mi, data, split, ...){
   
   # Adding a column to the dataset to allow a train-validation split:
   data <- data %>% 
@@ -134,10 +133,10 @@ mi_cv <- function(baseline.model, min.mi, data, split){
             select(-split)
   
   # Fitting the baseline model to the training set:
-  fit.train <- lavaan::cfa(baseline.model, train)
+  fit.train <- lavaan::cfa(baseline.model, train, ...)
   
   # Fitting the baseline model to the test set to obtain a baseline estimate of chi-square model fit:
-  fit.test <- lavaan::cfa(baseline.model, test)
+  fit.test <- lavaan::cfa(baseline.model, test, ...)
     
       # Saving the baseline values in test set:
       # - these values are to be used to assess if there is an improvement in fit in the test set when a modification is added.
