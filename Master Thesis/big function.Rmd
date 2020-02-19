@@ -130,8 +130,11 @@ mi_cv <- function(baseline.model, min.mi, data, split, ...){
             filter(split == "test") %>% 
             select(-split)
   
+  # Saving baseline model as model:
+  model <- baseline.model
+  
   # Fitting the baseline model to the training set:
-  fit.train <- lavaan::cfa(baseline.model, train, ...)
+  fit.train <- lavaan::cfa(model, train, ...)
   
   # Fitting the baseline model to the test set to obtain a baseline estimate of chi-square model fit:
   fit.test <- lavaan::cfa(baseline.model, test, ...)
@@ -176,9 +179,7 @@ mi_cv <- function(baseline.model, min.mi, data, split, ...){
     mod.train <- paste(mi.train[1, 1], mi.train[1, 2], mi.train[1, 3], sep = " ")
     
     # Adding the modification to the model:
-    mod.model <- paste(model, mod.train, sep = "
-                   ")
-    
+    mod.model <- paste(model, mod.train, sep = "\n")
     
       # Fitting the modified model to the test set:
       mod.fit.test <- lavaan::cfa(mod.model, test)
@@ -194,39 +195,40 @@ mi_cv <- function(baseline.model, min.mi, data, split, ...){
   }
       
       
+# This below was an attempt at doing it another way (without using a while loop):
       
-  # Obtaining the MIs:
-  mi.train <- lavaan::modindices(fit.train)
-    
-    # Taking only the relevant columns:
-    mi.train <- mi.train %>%
-      arrange(-mi) %>% 
-      select(lhs, op, rhs, mi)
-    
-      # Extracting the first row from those relevant columns:
-      lhs <- mi.train[1, 1]
-      op  <- mi.train[1, 2]
-      rhs <- mi.train[1, 3]
-      
-      # The first modification to be added to the model:
-      mod1 <- paste(lhs, op, rhs, sep = " ")
-      
-    # Adding the first modification to the model:
-      new.model <- paste(baseline.model, mod1, sep = "
-                         ")
-    
-    
-    # After adding a modification to the model, the model fit on the test set must be obtained and compared to the previous model fit on the test set. This, to check if there is an improvement
-    fit.test.mod <- lavaan::cfa(new.model, test)  
-    # sum.fit.test.mod <- summary(fit.test.mod)
-    
-    # Checking the model diagram with the modification:
-    # diagram <- semPaths(fit.test.mod, title = FALSE, curvepivot = TRUE)
-      
-      
-        
-    # return for checking:
-    return(test.baseline)
+  # # Obtaining the MIs:
+  # mi.train <- lavaan::modindices(fit.train)
+  #   
+  #   # Taking only the relevant columns:
+  #   mi.train <- mi.train %>%
+  #     arrange(-mi) %>% 
+  #     select(lhs, op, rhs, mi)
+  #   
+  #     # Extracting the first row from those relevant columns:
+  #     lhs <- mi.train[1, 1]
+  #     op  <- mi.train[1, 2]
+  #     rhs <- mi.train[1, 3]
+  #     
+  #     # The first modification to be added to the model:
+  #     mod1 <- paste(lhs, op, rhs, sep = " ")
+  #     
+  #   # Adding the first modification to the model:
+  #     new.model <- paste(baseline.model, mod1, sep = "
+  #                        ")
+  #   
+  #   
+  #   # After adding a modification to the model, the model fit on the test set must be obtained and compared to the previous model fit on the test set. This, to check if there is an improvement
+  #   fit.test.mod <- lavaan::cfa(new.model, test)  
+  #   # sum.fit.test.mod <- summary(fit.test.mod)
+  #   
+  #   # Checking the model diagram with the modification:
+  #   # diagram <- semPaths(fit.test.mod, title = FALSE, curvepivot = TRUE)
+  #     
+  #     
+  #       
+  #   # return for checking:
+  #   return(test.baseline)
 }
   
 ```
