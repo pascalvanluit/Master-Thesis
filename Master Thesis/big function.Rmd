@@ -84,7 +84,6 @@ Testing mi_10_whileloop function:
 mi_whileloop(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
 ```
 
-Problem: the function adds one modification too much... "visual =~ x5" is not meant to be added. It is indeed the next modification which would be made, but its MI value is < 10.
 
 Are the MI values really above 10 after adding the modifications? Answer: No.
 ```{r}

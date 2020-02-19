@@ -47,7 +47,7 @@ DGP.model.2 <- "
     f1 ~~ rho*f2
 
     # Measurement model
-    f1 =~ lambda*x1 + lambda*x2 + lambda*x3 # + delta*x4
+    f1 =~ lambda*x1 + lambda*x2 + lambda*x3 + delta*x4
     f2 =~ lambda*x4 + lambda*x5 + lambda*x6 "
 
 DGP.data.2 <- cSEM.DGP::generateData(DGP.model.2, .return_type = "cor",
@@ -61,7 +61,7 @@ DGP.data.2
 
 DGP.data.2$dgp[[2]]
 ```
-
+Problem: cannot simulate data with a cross-loading.
 
 
 Example from lavaan package:
@@ -108,7 +108,7 @@ cor <- cor(DGP.data)
 How about with simsem?
 - simsem requires more set up stuff...
 ```{r}
-
+?simsem
 ```
 
 
