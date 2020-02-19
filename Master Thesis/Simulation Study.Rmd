@@ -40,11 +40,11 @@ semPaths(fit.DGP)
 ```
 The above attempt does not quite give me what I want. The arrows are simply labelled but i do not think the values are actually in the labels so to speak.
 
-Below I try it again, but this time with the generateData function from the cSEM.DGP package:
+Below I try to simulate data using the generateData function from the cSEM.DGP package:
 ```{r}
 DGP.model.2 <- " 
     # Structural model
-    f1 ~ rho*f2
+    f1 ~~ rho*f2
 
     # Measurement model
     f1 =~ lambda*x1 + lambda*x2 + lambda*x3 # + delta*x4
@@ -54,18 +54,13 @@ DGP.data.2 <- cSEM.DGP::generateData(DGP.model.2, .return_type = "cor",
                                      lambda = c(0.2, 0.5, 0.8),
                                      delta  = c(0.2, 0.5, 0.8),
                                      rho    = c(0.2, 0.5, 0.8),
-                                     .handle_negative_definite = "set_NA"
+                                     .handle_negative_definite = "drop"
                                      )
 
-dgpdata <- DGP.data.2
+DGP.data.2
 
-dgpdata14 <- dgpdata[1, 4]
-
-DGP.data.2$dgp[[8]]
+DGP.data.2$dgp[[2]]
 ```
-Problem: Cannot have one indicator be connected to more than one construct.
-
-
 
 
 
