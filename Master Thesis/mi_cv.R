@@ -17,7 +17,6 @@ mi_cv <- function(baseline.model, data, split, ...){
   # Saving baseline model as model:
   model <- baseline.model
   
-  
   ## Fitting the baseline model to the training set:
   fit.train <- lavaan::cfa(model, train, ...)
   
@@ -29,22 +28,14 @@ mi_cv <- function(baseline.model, data, split, ...){
     arrange(-mi) %>% 
     select(lhs, op, rhs, mi)
   
-  # Extracting the restriced parameter with the largest MI value:
-  largest.mi  <- MIs[1, ]
-  
   # Specifying a modification to be added to the model:
-  mod <- paste(largest.mi[1, 1], largest.mi[1, 2], largest.mi[1, 3], sep = " ")
+  mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
   
   ## Fitting the baseline model to the test set:
   fit.test.1 <- lavaan::cfa(model, test, ...)
   
-  # # Saving the baseline values in test set:
-  # # - these values are to be used to assess if there is an improvement in fit in the test set when a modification is added.
-  # fit.measures.test <- fitmeasures(fit.test)
-  #     
-  # test.baseline <- data.frame(test.chisq.baseline  = fit.measures.test["chisq"],
-  #                                 test.pvalue = fit.measures.test["pvalue"],
-  #                                 test.df     = fit.measures.test["df"])
+  # Creating chisq.diff object:
+  chisq.diff <- lavaan::lavTestLRT(fit.train, fit.test.1)
   
   ###################
   # WHILE FUNCTTION #
@@ -57,11 +48,14 @@ mi_cv <- function(baseline.model, data, split, ...){
     # Adding modification to the model:
     model <- paste(model, mod, sep = "\n")
     
-    # Fitting the model to the train set:
-    fit.train <- lavaan::cfa(model, train)
-    
     # Fitting the model to the test set:
     fit.test.2 <- lavaan::cfa(model, test)
+    
+    # Checking the chisq.diff in the test set:
+    chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2) 
+    
+    # Fitting the model to the train set:
+    fit.train <- lavaan::cfa(model, train)
     
     # Obtaining new MI values:
     MIs <- lavaan::modindices(fit.train)
@@ -71,31 +65,9 @@ mi_cv <- function(baseline.model, data, split, ...){
       arrange(-mi) %>% 
       select(lhs, op, rhs, mi)
     
-    # Updating the largest.mi:
-    largest.mi <- MIs[1, ]
-    
-    
-    # Fitting the model to the test data:
-    fit.test.2 <- lavaan::cfa(model, test)
-    
-    # Obtaining the new fit measures:
-    # fit.measures.test <- fitmeasures(fit.test)
-    
-    
-    # Checking if there is a better fit according to chi-square diff:
-    chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
-    
-    
-    
+    # Print the final model
     print(model)
     
   }
   
-  
-  #   
-  #   # Checking the model diagram with the modification:
-  #   # diagram <- semPaths(fit.test.mod, title = FALSE, curvepivot = TRUE)
-  #      
-  #   # return for checking:
-  #   return(test.baseline)
 }
