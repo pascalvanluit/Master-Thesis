@@ -43,13 +43,13 @@ mi_cv <- function(baseline.model, data, split, ...){
   fit.test.1 <- lavaan::cfa(model, test, ...)
   
   # Creating chisq.diff object: ???????????????????????????????????????????
-  # chisq.diff <- lavaan::lavTestLRT(fit.train, fit.test.1)
-  chisq.diff <- list(`Pr(>Chisq)` = 0)
+  sign <- 0
+  # chisq.diff <- list(`Pr(>Chisq)` = 0)
   
   ###################
   # WHILE FUNCTTION #
   ###################
-  while(chisq.diff[2] < .05){
+  while(sign == 0){
     
     # Extracting a modification to be added to the model:
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
@@ -62,7 +62,13 @@ mi_cv <- function(baseline.model, data, split, ...){
     
     # Checking the chisq.diff in the test set:
     chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
-    chisq.diff <- chisq.diff$`Pr(>Chisq)`
+    
+    # If function to update sign:
+    ifelse(chisq.diff$`Pr(>Chisq)` < .01,
+           sign <- 0,
+           sign <- 1)
+    
+    # chisq.diff <- chisq.diff$`Pr(>Chisq)`
     
     # Fitting the model to the train set:
     fit.train <- lavaan::cfa(model, train)
