@@ -64,7 +64,7 @@ mi_cv <- function(baseline.model, data, split, ...){
     chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
     
     # If function to update sign:
-    ifelse(chisq.diff$`Pr(>Chisq)` < .01,
+    ifelse(chisq.diff$`Pr(>Chisq)` < .8,
            sign <- 0,
            sign <- 1)
     
