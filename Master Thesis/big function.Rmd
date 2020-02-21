@@ -85,9 +85,7 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
 
 Testing mi_whileloop function:
 ```{r}
-mi_whileloop(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
-
-
+mi_whileloop(baseline.model = model, min.mi = 11, data = HolzingerSwineford1939)
 ```
 
 
@@ -143,14 +141,32 @@ mi_cv <- function(baseline.model, data, split, ...){
   ## Fitting the baseline model to the test set:
   fit.test.1 <- lavaan::cfa(model, test, ...)
   
+  
+  # Adding a modification to the model:
+  mod.model <- paste(model, mod, sep = "\n")
+  
+  # Find the fit of the modified model on the test set:
+  fit.test.2 <- lavaan::cfa(mod.model, test, ...)
+  
+  # Seeing whether this improves the fit:
+  chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
+  
+  # Assigning whether significantly better or not:
+  ifelse(chisq.diff$`Pr(>Chisq)`[2] < .87, sign <- TRUE, sign <- FALSE)
+  
+  
+  
   # Creating chisq.diff object: ???????????????????????????????????????????
-  sign <- TRUE
+  # empty.model <- " "
+  # empty.fit <- lavaan::cfa(empty.model, test)
+  # 
+  # sign <- NULL
   # chisq.diff <- list(`Pr(>Chisq)` = 0)
   
   ###################
   # WHILE FUNCTTION #
   ###################
-  while(sign){
+  while(sign == TRUE){
     
     # Extracting a modification to be added to the model:
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
@@ -165,7 +181,7 @@ mi_cv <- function(baseline.model, data, split, ...){
     chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
     
     # If function to update sign:
-    ifelse(chisq.diff$`Pr(>Chisq)`[2] < .86,
+    ifelse(chisq.diff$`Pr(>Chisq)`[2] < .05,
            sign <- TRUE,
            sign <- FALSE)
     
