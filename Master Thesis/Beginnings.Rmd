@@ -46,8 +46,9 @@ baseline <- data.frame(chisq  = fit.measures["chisq"],
 # mat
 # summary(fit)
 
-baseline
+# baseline
 
+# partable(fit)
 ```
 
 Checking the diagram
@@ -93,7 +94,11 @@ testHS <- HS %>%
 Making a model with the training set:
 ```{r}
 fit_train <- lavaan::cfa(model, trainHS)
-summary(fit_train, standardized = TRUE)
+# summary(fit_train, standardized = TRUE)
+
+obj <- lavTestLRT(fit, fit_train)
+obj
+obj$`Pr(>Chisq)`
 ```
 Chi-square = 24.581 (p = 0.002)
 
