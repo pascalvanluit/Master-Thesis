@@ -85,7 +85,7 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
 
 Testing mi_whileloop function:
 ```{r}
-mi_whileloop(baseline.model = model, min.mi = 11, data = HolzingerSwineford1939)
+mi_whileloop(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
 ```
 
 
@@ -152,16 +152,7 @@ mi_cv <- function(baseline.model, data, split, ...){
   chisq.diff <- lavaan::lavTestLRT(fit.test.1, fit.test.2)
   
   # Assigning whether significantly better or not:
-  ifelse(chisq.diff$`Pr(>Chisq)`[2] < .87, sign <- TRUE, sign <- FALSE)
-  
-  
-  
-  # Creating chisq.diff object: ???????????????????????????????????????????
-  # empty.model <- " "
-  # empty.fit <- lavaan::cfa(empty.model, test)
-  # 
-  # sign <- NULL
-  # chisq.diff <- list(`Pr(>Chisq)` = 0)
+  ifelse(chisq.diff$`Pr(>Chisq)`[2] < .05, sign <- TRUE, sign <- FALSE)
   
   ###################
   # WHILE FUNCTTION #
