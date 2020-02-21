@@ -86,20 +86,6 @@ mi_whileloop(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
 ```
 
 
-Are the MI values really above 10 after adding the modifications? Answer: No.
-```{r}
-mod.model <- " visual =~ x1 + x2 + x3
-               textual =~ x4 + x5 + x6
-               x2 ~~ x3 "
-               #visual =~ x5 "
-
-mod.fit <- lavaan::cfa(mod.model, HolzingerSwineford1939)
-
-modindices(mod.fit) %>% 
-  arrange(-mi)
-```
-
-
 ################################################################################
 ################################################################################
 ################################################################################

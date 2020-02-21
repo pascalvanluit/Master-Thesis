@@ -34,8 +34,9 @@ mi_cv <- function(baseline.model, data, split, ...){
   ## Fitting the baseline model to the test set:
   fit.test.1 <- lavaan::cfa(model, test, ...)
   
-  # Creating chisq.diff object:
-  chisq.diff <- lavaan::lavTestLRT(fit.train, fit.test.1)
+  # Creating chisq.diff object: ???????????????????????????????????????????
+  # chisq.diff <- lavaan::lavTestLRT(fit.train, fit.test.1)
+  chisq.diff <- list(`Pr(>Chisq)` = 0)
   
   ###################
   # WHILE FUNCTTION #
