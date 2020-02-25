@@ -1,9 +1,9 @@
-mi_cv_kfold <- function(baseline.model, data, k = 4){
+mi_cv_kfold <- function(baseline.model, data, k = 5){
   
   # Saving the baseline.model as model:
   model <- baseline.model
   
-  # Setting up the dataset to be split into k folds:
+## Setting up the dataset to be split into k folds:
   
     # Adding a column with assignment for each observation:
     n_obs      <- nrow(data)
@@ -13,7 +13,7 @@ mi_cv_kfold <- function(baseline.model, data, k = 4){
     # Create output vector for in the validation set:
     fit_valids <- rep(0, k)
     
-  # Fitting the data to a the different training sets:
+## Fitting the data to a the different training sets:
   for (i in 1:k) {
     
     # Splitting the data in train and validation set
@@ -39,14 +39,17 @@ mi_cv_kfold <- function(baseline.model, data, k = 4){
     model <- paste(model, mod, sep = "\n")
     
     # Fitting the modified model on the valid set:
-    fit_valid_i <- lavaan::cfa(model, valid)
+    fit_valid <- lavaan::cfa(model, valid)
     
     # Calculate the model fit in the validation set:
-    fit_valids[i] <- lavaan::fitmeasures(fit_valid_i)
+    fit_measures_valids <- lavaan::fitmeasures(fit_valid[i], c("chisq", "df", "pvalue"))
+    
+    # Find the average of the fits in the validation sets:
+    avg_fit_valids <- mean(fit_measures_valids)
     
     
   }
-  
+  return(avg_fit_valids)
 }
 
 
