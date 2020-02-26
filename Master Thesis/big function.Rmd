@@ -193,7 +193,9 @@ mi_cv <- function(baseline.model, data, split, ...){
     
   }
   
-  # Return the baseline model as well:
+  # Return the baseline model as well (with a label):
+  names(baseline.model) <- c("Baseline Model")
+  
   return(baseline.model)
   
 }
