@@ -5,17 +5,15 @@ date: "2 February 2020"
 output: html_document
 ---
 
-Other packages that are used:
+Set up:
 
 ```{r, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(lavaan)
 
 set.seed(88)
-```
 
-Model to be used for testing:
-```{r}
+# Model to be used for testing:
 model <- " visual =~ x1 + x2 + x3
            textual =~ x4 + x5 + x6 "
 ```
@@ -73,10 +71,13 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
     # Updating largest.mi:
     largest.mi <- MIs[1, ]
     
+    # Name the model:
     print(model)
+    
   }
  
-  # return the baseline model as well:
+  # return the baseline model as well (with a label):
+  names(baseline.model) <- c("Baseline Model")
   return(baseline.model)  
        
 }
@@ -85,7 +86,7 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
 
 Testing mi_whileloop function:
 ```{r}
-mi_whileloop(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
+mi_whileloop(baseline.model = model, min.mi = 5, data = HolzingerSwineford1939)
 ```
 
 
@@ -325,8 +326,23 @@ mi_cv_kfold <- function(baseline.model, data, k = 5){
     # Fitting the baseline model to the validation set:
     fit.valid.1.i <- lavaan::cfa(model, valid)
     
+    # Adding a modification to the model:
+    mod.model <- paste(model, mod, sep = "\n")
+    
+    # Find the fit of the modified model on the validation set:
+    fit.valid.2.i <- lavaan::cfa(mod.model, valid)
+    
+    # Seeing whether this improves the fit:
+    chisq.diff.i <- lavaan::lavTestLRT(fit.valid.1.i, fit.valid.2.i)
+    
+    # Assigning whether fit is significantly better or not:
+    ifelse(chisq.diff.i$`Pr(>Chisq)`[2] < .05, sign <- TRUE, sign <- FALSE)
+    
+    # Finding the mean p-value:
+    mean.chisq.diff <- mean(chisq.diff.i)
+    
     # Creating chisq.diff object:
-    avg.chisq.diff <- list(`Pr(>Chisq)` = 0)
+    # mean.chisq.diff <- list(`Pr(>Chisq)` = 0)
     
   ###################
   # WHILE FUNCTTION #
@@ -343,8 +359,8 @@ mi_cv_kfold <- function(baseline.model, data, k = 5){
     fit.valid.2.i <- lavaan::cfa(model, valid)
     
     # Obtaining chisq.diffs and finding the mean:
-    chisq.diff[i] <- lavaan::lavTestLRT(fit.valid.1.i, fit.valid.2.i)
-    mean.chisq.diff <- mean(chisq.diff[i])
+    fit.valids[i] <- lavaan::lavTestLRT(fit.valid.1.i, fit.valid.2.i)
+    mean.chisq.diff <- mean(fit.valids[i])
     
     # Fitting the model to the training set:
     fit.train <- lavaan::cfa(model, train)
@@ -358,7 +374,7 @@ mi_cv_kfold <- function(baseline.model, data, k = 5){
     # Print the final model:
     print(model)
     
-  }
+  } 
   
     
     # # Adding the modification to the model:
@@ -372,9 +388,6 @@ mi_cv_kfold <- function(baseline.model, data, k = 5){
     # 
     # # Getting a mean of the chisq.diff's
     # mean.chisq.diff <- mean(chisq.diff[i])
-    
-    
-    
     
     # # Calculate the model fit in the validation set:
     # fit_measures_valids <- lavaan::fitmeasures(fit_valid, c("chisq", "df", "pvalue"))

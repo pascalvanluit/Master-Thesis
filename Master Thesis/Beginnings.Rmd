@@ -21,14 +21,27 @@ Model that will be experimented with:
 model <- " visual =~ x1 + x2 + x3
            textual =~ x4 + x5 + x6 "
 # model_add <- " visual =~ x5 "
+model.2 <- " visual =~ x1 + x2 + x3
+             textual =~ x4 + x5 + x6 
+             visual =~ x5 "
 
-# final_model <- c(model, model_add)
+model.3 <- " visual =~ x1 + x2 + x3
+             textual =~ x4 + x5 + x6 
+             visual =~ x4 "
 
 fit <-lavaan:::cfa(model, HolzingerSwineford1939)
-sum <- summary(fit)
-fitm <- fitmeasures(fit, c("chisq", "df", "pvalue"))
+fit.2 <- lavaan::cfa(model.2, HolzingerSwineford1939)
+fit.3 <- lavaan::cfa(model.3, HolzingerSwineford1939)
 
-fitm["df"]
+diff.1 <- lavaan::lavTestLRT(fit.2, fit)
+diff.2 <- lavaan::lavTestLRT(fit.3, fit)
+
+mean(diff.1$`Pr(>Chisq)`, diff.2$`Pr(>Chisq)`)
+
+# sum <- summary(fit)
+# fitm <- fitmeasures(fit, c("chisq", "df", "pvalue"))
+# 
+# fitm["df"]
 # partable(fit)
 ```
 
