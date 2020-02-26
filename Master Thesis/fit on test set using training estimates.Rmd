@@ -1,0 +1,33 @@
+Finding the fit* of a model on the test set.
+*The model is not fit on the set, instead the parameter values found according to the training set are preserved.
+```{r}
+
+HS <- HolzingerSwineford1939
+# There are 301 observations. Let's use a 70 - 30 split. 211 train, 90 test.
+HS <- HS %>% 
+  mutate(split = rep(c("train", "test"), times = c(211, 90)))
+
+trainHS <- HS %>% 
+  filter(split == "train") %>% 
+  select(-split)
+
+testHS <- HS %>% 
+  filter(split == "test") %>% 
+  select(-split)
+
+model <- " visual =~ x1 + x2 + x3
+           textual =~ x4 + x5 + x6 "
+
+
+
+fit.train <- lavaan::cfa(model, trainHS)
+summary(fit.train)
+
+fit.test <- lavaan::lavaan(model = model, data = testHS,
+                           auto.fix.first = TRUE, auto.var = TRUE,
+                           do.fit = FALSE, start = fit.train,
+                           test = "standard",
+                           model.type = "cfa"
+                           )
+summary(fit.test)
+```
