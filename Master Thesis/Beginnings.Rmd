@@ -230,6 +230,46 @@ train.partable <- train.partable %>%
 
 ## Making updated model:
 
+# Trying with 1 line first:
+
+# Obtaining the RHS (estimate * variable):
+line1rhs <- paste(train.partable[1, 4], train.partable[1, 3], sep = "*")
+
+# Obtaining the LHS and operator:
+line1lhsop <- paste(train.partable[1, 1], train.partable[1, 2])
+
+# Combining the two:
+line1 <- paste(line1lhsop, line1rhs, sep = " ")
+
+line1 # So, this works.
+```
+
+Next, let me try automating this...
+```{r}
+# vector to save outputs in:
+lhs <- rep(0, nrow(train.partable))
+rhs <- rep(0, nrow(train.partable))
+line <- rep(0, nrow(train.partable))
+
+for (i in 1:nrow(train.partable)) {
+  lhs[i] <- paste(train.partable[i, 1], train.partable[i, 2])
+  rhs[i] <- paste(train.partable[i, 4], train.partable[i, 3], sep = "*")
+  line <- paste(lhs, rhs, sep = " ")
+  
+  for (i in 1:nrow(train.partable)) {
+    line[i] <- line[i]
+  }
+  
+  # fix.model <- paste(line[1], line[2], line[3], sep = "\n ")
+}
+fix.model
+```
+
+
+
+
+Another attempt:
+```{r}
 # Object to save parameters in:
 mod <- data.frame(matrix(ncol = 4, nrow = nrow(train.partable)))
   #rep(0, nrow(train.partable))
@@ -245,7 +285,6 @@ for (i in 1:nrow(train.partable)) {
 head(mod)
 
 
-mod[1,]
 
 # Making a model object:
 fixed.model <- paste(mod)
