@@ -27,6 +27,7 @@ fit.test <- lavaan::lavaan(model = model, data = testHS,
                            auto.fix.first = TRUE, auto.var = TRUE,
                            do.fit = FALSE, start = fit.train,
                            test = "standard",
+                           optim.force.converged = TRUE,
                            model.type = "cfa"
                            )
 summary(fit.test)
