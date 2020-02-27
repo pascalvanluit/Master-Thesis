@@ -256,15 +256,24 @@ for (i in 1:nrow(train.partable)) {
   rhs[i] <- paste(train.partable[i, 4], train.partable[i, 3], sep = "*")
   line <- paste(lhs, rhs, sep = " ")
   
-  for (i in 1:nrow(train.partable)) {
-    line[i] <- line[i]
-  }
+  # ff.model <- paste(line, collapse = " ")
   
-  # fix.model <- paste(line[1], line[2], line[3], sep = "\n ")
+  # for (i in 1:nrow(train.partable)) {
+  #   fix.model <- c(line[i], sep = "\n ")
+  # }
+  
+  # Trying manually:
+  ff.model <- paste(line[1], line[2], line[3], line[4], line[5], line[6], line[7], line[8], line[9], line[10], line[11], line[12], line[13], line[14], sep = "\n ")
 }
-fix.model
-```
 
+ff.model
+
+lavaan::cfa(ff.model, trainHS)
+semPaths(lavaan::cfa(ff.model, HolzingerSwineford1939), "est")
+
+# summary(lavaan::cfa(model, testHS))
+```
+Conclusion: when all parameters are fixed, no fit is found. Huilen.
 
 
 
