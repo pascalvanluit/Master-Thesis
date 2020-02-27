@@ -6,7 +6,7 @@ output: html_document
 ---
 
 Loading packages that are likely to be relevant:
-```{r}
+```{r warning=FALSE}
 library(lavaan)
 library(sem)
 library(semtree)
@@ -88,7 +88,9 @@ testHS <- HS %>%
 Making a model with the training set:
 ```{r}
 fit_train <- lavaan::cfa(model, trainHS)
-# summary(fit_train, standardized = TRUE)
+sum <- summary(fit_train)
+
+sum$PE$est
 
 obj <- lavTestLRT(fit, fit_train)
 obj
@@ -193,6 +195,66 @@ fit.test <- lavaan::lavaan(model = model, data = testHS,
                            )
 summary(fit.test)
 ```
+
+Trying different method:
+```{r}
+fit.test.fixed <- lavaan::lavaan(model, testHS,
+                                 auto.fix.first = TRUE, auto.var = TRUE,
+                                 do.fit = FALSE, start = fit.train
+                                 )
+summary(fit.test.fixed)
+
+lavaan:::lav_model_fit(model, testHS)
+```
+
+Using parameter estimates found in train set to define model to be fitted in the test set:
+```{r}
+# Does fixing parameters actually work? Lets check the output
+fixed.model <- " visual =~ 3*x1 + 4*x2 + 5*x3 
+                 x1 ~~ 0.5*x1 "
+fit.fixed.model <- lavaan::cfa(fixed.model, trainHS)
+summary(fit.fixed.model)
+```
+
+Yes, fixing parameters works.
+Idea: to use the output of partable to completely define the model which can be fitted on the test set.
+```{r}
+fit.train <- lavaan::cfa(model, trainHS)
+
+train.partable <- partable(fit.train)
+
+head(train.partable)
+
+train.partable <- train.partable %>% 
+  select(lhs, op, rhs, est)
+
+## Making updated model:
+
+# Object to save parameters in:
+mod <- data.frame(matrix(ncol = 4, nrow = nrow(train.partable)))
+  #rep(0, nrow(train.partable))
+
+# Obtaining each parameter estimate:
+for (i in 1:nrow(train.partable)) {
+  mod[i, 1] <- paste(train.partable[i, 1])
+  mod[i, 2] <- paste(train.partable[i, 2])
+  mod[i, 3] <- paste(train.partable[i, 3])
+  mod[i, 4] <- paste(train.partable[i, 4])
+}
+
+head(mod)
+
+
+mod[1,]
+
+# Making a model object:
+fixed.model <- paste(mod)
+```
+
+
+
+
+
 
 
 
