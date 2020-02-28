@@ -1,4 +1,4 @@
-mod_adj_mi <- function(baseline.model, min.mi = 10, data, ...){
+mod_adj_mi <- function(baseline.model,data, min.mi = 10, ...){
   
   # Saving baseline model as model:
   model <- baseline.model
