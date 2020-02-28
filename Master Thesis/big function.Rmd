@@ -86,7 +86,7 @@ mi_whileloop <- function(baseline.model, min.mi = 10, data, ...){
 
 Testing mi_whileloop function:
 ```{r}
-mi_whileloop(baseline.model = model, min.mi = 5, data = HolzingerSwineford1939)
+mod_adj_mi(baseline.model = model, min.mi = 5, data = HolzingerSwineford1939)
 ```
 
 
