@@ -1,9 +1,7 @@
 set.seed(88)
 
 mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
-  
-  set.seed(88)
-  
+
   # Saving the baseline.model as model:
   model <- baseline.model
   
@@ -12,48 +10,46 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   select_vec <- rep(1:k, length.out = n_obs)
   data_split <- data %>% mutate(fold = sample(select_vec))
   
-  # Allocating space for outputs in the for loop:
+  # Obtaining MI values:
   
     # Fitting the model on the full dataset to create a space where OOS MIs can be saved:
     fit_full <- lavaan::cfa(model, data)
     mi       <- lavaan::modindices(fit_full)
     mi       <- mi %>% select(lhs, op, rhs, mi)
     mi[, 4]  <- 0
+    cv_mi    <- mi
     
   
-  # Loop of fitting model to training set and then to test set to get MI values:
-  for (i in 1:k) {
+    # Loop of fitting model to training set and then to test set to get MI values:
+    for (i in 1:k) {
     
-    # Splitting the data:
-    train <- data_split %>% filter(fold != i)
-    test  <- data_split %>% filter(fold == i)
+      # Splitting the data:
+      train <- data_split %>% filter(fold != i)
+      test  <- data_split %>% filter(fold == i)
     
-    # Creating train and test fits:
-    fit_train <- lavaan::cfa(model, train)
-    fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
+      # Creating train and test fits:
+      fit_train <- lavaan::cfa(model, train)
+      fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
     
-    # Obtaining MI values:
-    mi.test <- lavaan::modindices(fit_test)
+      # Obtaining MI values:
+      mi.test <- lavaan::modindices(fit_test)
     
-      # Wrangling MI output:
-      mi.test <- mi.test %>% 
-        select(lhs, op, rhs, mi)
+        # Wrangling MI output:
+        mi.test <- mi.test %>% 
+          select(lhs, op, rhs, mi)
     
-    # Combining the OOS MI values:
-    mi[, 4] <- mi.test[, 4]
+      # Combining the OOS MI values:
+      cv_mi[, 4] <- mi.test[, 4]
     
-    # Taking the mean:
-    cv_mi <- mi
+      # Fixing up the MI output
+      cv_mi <- cv_mi %>%
+        mutate(mi = round(mi, 3)) %>% 
+        mutate(cv_mi = mi / k) %>% 
+        select(lhs, op, rhs, cv_mi) %>% 
+        arrange(-cv_mi)
     
-    # Fixing up the MI output
-    cv_mi <- cv_mi %>%
-      mutate(mi = round(mi, 3)) %>% 
-      mutate(cv_mi = mi / k) %>% 
-      select(lhs, op, rhs, cv_mi) %>% 
-      arrange(-cv_mi)
-    
-    # Checking output:
-    # return(cv_mi)
+      # Checking output:
+      # return(cv_mi)
   }
   
   # Obtaining the restricter parameter with the largest MI value:
@@ -76,6 +72,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     mi       <- lavaan::modindices(fit_full)
     mi       <- mi %>% select(lhs, op, rhs, mi)
     mi[, 4]  <- 0
+    cv_mi    <- mi
     
     # Loop of fitting the modified model to training set and test set to get MIs:
     for (i in 1:k) {
@@ -96,10 +93,10 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
         select(lhs, op, rhs, mi)
     
       # Combining the OOS MI values:
-      mi[, 4] <- mi.test[, 4]
+      cv_mi[, 4] <- mi.test[, 4]
     
       # Taking the mean:
-      cv_mi <- mi
+      # cv_mi <- mi
     
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
@@ -112,11 +109,12 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     
     # Updating largest_mi:
     largest_mi <- cv_mi[1, ]
-      
-    # Print the model:
-    print(model)
   
   }
+  
+  # Print the final model:
+  final_model <- tail(model, 1)
+  return(final_model)
   
 }
 

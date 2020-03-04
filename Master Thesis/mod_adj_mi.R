@@ -43,9 +43,6 @@ mod_adj_mi <- function(baseline.model,data, min.mi = 10, ...){
     # Updating largest.mi:
     largest.mi <- MIs[1, ]
     
-    # Name the model:
-    # print(tail(model, 1))
-    
   }
   
   # Print the final model:
