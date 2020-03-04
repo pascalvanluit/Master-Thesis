@@ -43,7 +43,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
-        mutate(mi = round(mi, 3)) %>% 
+        mutate_if(is.numeric, round, 3) %>% 
         mutate(cv_mi = mi / k) %>% 
         select(lhs, op, rhs, cv_mi) %>% 
         arrange(-cv_mi)
@@ -100,7 +100,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
-        mutate(mi = round(mi, 3)) %>% 
+        mutate_if(is.numeric, round, 3) %>% 
         mutate(cv_mi = mi / k) %>% 
         select(lhs, op, rhs, cv_mi) %>% 
         arrange(-cv_mi)
