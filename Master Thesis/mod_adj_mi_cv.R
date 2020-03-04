@@ -44,6 +44,10 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
         mutate_if(is.numeric, round, 3) %>% 
+        
+################################################################################
+        # PROBLEM HERE #
+################################################################################
         mutate(cv_mi = mi / k) %>% 
         select(lhs, op, rhs, cv_mi) %>% 
         arrange(-cv_mi)
@@ -57,6 +61,8 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   
   # Specifying a modification to be added to the model:
   mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
+  
+  browser()
   
   # While loop 
   while (largest_mi[1, 4] > min.mi) {
@@ -95,9 +101,6 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
       # Combining the OOS MI values:
       cv_mi[, 4] <- mi.test[, 4]
     
-      # Taking the mean:
-      # cv_mi <- mi
-    
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
         mutate_if(is.numeric, round, 3) %>% 
@@ -111,7 +114,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     largest_mi <- cv_mi[1, ]
   
   }
-  
+
   # Print the final model:
   final_model <- tail(model, 1)
   return(final_model)
