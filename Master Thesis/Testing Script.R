@@ -15,5 +15,5 @@ source("mod_adj_mi_cv.R")
 # Testing mod_adj_mi()
 mod_adj_mi(baseline.model = model, min.mi = 10, data = HolzingerSwineford1939)
 
-# Testing mod_adj_chisq_cv()
-mod_adj_chisq_cv(baseline.model = model, data = HolzingerSwineford1939,k = 5)
+# Testing mod_adj_mi_cv()
+mod_adj_mi_cv(baseline.model = model, data = HolzingerSwineford1939, k = 5)

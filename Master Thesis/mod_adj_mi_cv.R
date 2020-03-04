@@ -1,4 +1,8 @@
-mod_adj_mi_cv <- function(baseline.model, data, k = 5){
+set.seed(88)
+
+mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
+  
+  set.seed(88)
   
   # Saving the baseline.model as model:
   model <- baseline.model
@@ -8,15 +12,16 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5){
   select_vec <- rep(1:k, length.out = n_obs)
   data_split <- data %>% mutate(fold = sample(select_vec))
   
-  # Fitting the model to the full dataset and gettings MIs:
-  fit_full <- lavaan::cfa(model, data)
-  mi <- lavaan::modindices(fit_full)
+  # Allocating space for outputs in the for loop:
   
-  # Preparing cross-validated MIs data frame:
-  cv_mi <- mi
-  cv_mi[, -1:-3] <- 0
+    # Fitting the model on the full dataset to create a space where OOS sample mod indices can be saved:
+    fit_full <- lavaan::cfa(model, data)
+    mi       <- lavaan::modindices(fit_full)
+    mi       <- mi %>% select(lhs, op, rhs, mi)
+    mi[, 4]  <- 0
+    
   
-  # Loop for obtaining CV MIs:
+  # Loop of fitting model to training set and then to test set to get MI values:
   for (i in 1:k) {
     
     # Splitting the data:
@@ -27,25 +32,42 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5){
     fit_train <- lavaan::cfa(model, train)
     fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
     
-    # MIs obtained from test set:
-    cv_mi[, -1:-3] <- cv_mi[, -1:-3] + lavaan::modindices(fit_test)[, -1:-3]
+    # Obtaining MI values:
+    mi.test <- lavaan::modindices(fit_test)
     
-    # Obtaining the mean mi values:
-    #mean_cv_mi <- cv_mi / k
+      # Wrangling MI output:
+      mi.test <- mi.test %>% 
+        select(lhs, op, rhs, mi)
     
+    # Combining the OOS MI values:
+    mi[, 4] <- mi.test[, 4]
+    
+    # Taking the mean:
+    cv_mi <- mi
+    
+    # Fixing up the MI output
+    cv_mi <- cv_mi %>%
+      mutate(mi = round(mi, 3)) %>% 
+      mutate(cv_mi = mi / k) %>% 
+      select(lhs, op, rhs, cv_mi) %>% 
+      arrange(-cv_mi)
+    
+    # Checking output:
+    return(cv_mi)
   }
   
-  print(cv_mi)
+  # Obtaining the restricter parameter with the largest MI value:
+  largest_mi <- cv_mi[1, ]
   
+  # Specifying a modification to be added to the model:
+  mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
+  
+  # While loop 
+  while (largest_mi[1, 4] > min.mi) {
+    
+  }
+    
 }
-
-
-
-
-
-
-
-
 
 
 mi_cv_kfold <- function(baseline.model, data, k = 5){
