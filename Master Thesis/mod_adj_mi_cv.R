@@ -14,7 +14,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   
   # Allocating space for outputs in the for loop:
   
-    # Fitting the model on the full dataset to create a space where OOS sample mod indices can be saved:
+    # Fitting the model on the full dataset to create a space where OOS MIs can be saved:
     fit_full <- lavaan::cfa(model, data)
     mi       <- lavaan::modindices(fit_full)
     mi       <- mi %>% select(lhs, op, rhs, mi)
@@ -71,6 +71,12 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     # Adding the modification to the model:
     model <- paste(model, mod, sep = "\n")
     
+    # Fitting the model on the full dataset to create a space where OOS sample mod indices can be saved:
+    fit_full <- lavaan::cfa(model, data)
+    mi       <- lavaan::modindices(fit_full)
+    mi       <- mi %>% select(lhs, op, rhs, mi)
+    mi[, 4]  <- 0
+    
     # Loop of fitting the modified model to training set and test set to get MIs:
     for (i in 1:k) {
       
@@ -102,20 +108,16 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
         select(lhs, op, rhs, cv_mi) %>% 
         arrange(-cv_mi)
       
-      # Updating largest_mi:
-      largest_mi <- cv_mi[1, ]
-      
-      # Print the model:
-      print(model)
-      
     }
-   
+    
+    # Updating largest_mi:
+    largest_mi <- cv_mi[1, ]
+      
+    # Print the model:
     print(model)
-     
+  
   }
   
-  print(model)
-   
 }
 
 
