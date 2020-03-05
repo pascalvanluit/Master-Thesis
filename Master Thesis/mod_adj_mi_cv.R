@@ -44,13 +44,9 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
         mutate_if(is.numeric, round, 3) %>% 
-        
-################################################################################
-        # PROBLEM HERE #
-################################################################################
-        mutate(cv_mi = mi / k) %>% 
-        select(lhs, op, rhs, cv_mi) %>% 
-        arrange(-cv_mi)
+        mutate(mi / k) %>% 
+        select(lhs, op, rhs, mi) %>% 
+        arrange(-mi)
     
       # Checking output:
       # return(cv_mi)
@@ -61,8 +57,6 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   
   # Specifying a modification to be added to the model:
   mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
-  
-  browser()
   
   # While loop 
   while (largest_mi[1, 4] > min.mi) {
@@ -104,9 +98,9 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
       # Fixing up the MI output
       cv_mi <- cv_mi %>%
         mutate_if(is.numeric, round, 3) %>% 
-        mutate(cv_mi = mi / k) %>% 
-        select(lhs, op, rhs, cv_mi) %>% 
-        arrange(-cv_mi)
+        mutate(mi / k) %>% 
+        select(lhs, op, rhs, mi) %>% 
+        arrange(-mi)
       
     }
     
