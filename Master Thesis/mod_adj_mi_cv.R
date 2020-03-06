@@ -7,13 +7,13 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   fit <- lavaan::cfa(model, data)
   
   # Obtaining MI values:
-  MIs <- cv_mi(model, data, k = 5, iter = 1, ...)
+  MIs <- cv_mi(model, data, k = 5, iter = 1)
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
   
   # Obtaining the restricter parameter with the largest MI value:
-  largest_mi <- cv_mi[1, ]
+  largest_mi <- MIs[1, ]
   
   # Specifying a modification to be added to the model:
   mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
@@ -22,7 +22,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   while (largest_mi[1, 4] > min.mi) {
     
     # Obtaining the modification to be added to the model:
-    mod <- paste(cv_mi[1, 1], cv_mi[1, 2], cv_mi[1, 3], sep = " ")
+    mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
     
     # Adding the modification to the model:
     model <- paste(model, mod, sep = "\n")
@@ -31,48 +31,25 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     fit <- lavaan::cfa(model, data)
     
     # Obtaining MI values:
-    MIs <- cv_mi(model, data, k = 5, iter = 1, ...)
+    MIs <- cv_mi(model, data, k = 5, iter = 1)
     
-    # Loop of fitting the modified model to training set and test set to get MIs:
-    for (i in 1:k) {
-      
-      # Splitting the data:
-      train <- data_split %>% filter(fold != i)
-      test  <- data_split %>% filter(fold == i)
+    # Arranging the MIs from largest to smallest:
+    MIs <- MIs %>% arrange(-mi)
     
-      # Creating train and test fits:
-      fit_train <- lavaan::cfa(model, train)
-      fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
-    
-      # Obtaining MI values:
-      mi_test <- lavaan::modindices(fit_test)
-    
-      # Wrangling MI output:
-      mi_test <- mi_test %>% 
-        select(lhs, op, rhs, mi)
-    
-      # Combining the OOS MI values:
-      cv_mi[, 4] <- mi_test[, 4]
-    
-      # Fixing up the MI output
-      cv_mi <- cv_mi %>%
-        mutate_if(is.numeric, round, 3) %>% 
-        mutate(mi = mi / k) %>% 
-        select(lhs, op, rhs, mi) %>% 
-        arrange(-mi)
+    # Updating largest_mi:
+    largest_mi <- MIs[1, ]
       
     }
     
-    # Updating largest_mi:
-    largest_mi <- cv_mi[1, ]
-  
-  }
-
   # Print the final model:
   final_model <- tail(model, 1)
   return(final_model)
   
-}
+  }
+
+  
+  
+
 
 mi_cv <- function(data, model, k, iters = 1) {
   

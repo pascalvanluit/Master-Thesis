@@ -26,10 +26,11 @@ cv_mi <- function(model, data, k = 5, iter = 1, ...){
     mi_test <- lavaan::modindices(fit_test)
     
     # Combining the OOS MI values:
-    cv_mi[, -1:-3] <- cv_mi[,-1:-3] + mi_test[, -1:-3]
+    cv_mi[, -1:-3] <- cv_mi[, -1:-3] + mi_test[, -1:-3]
   }
   
   # Fixing up the MI output
   cv_mi[, -1:-3] <- cv_mi[, -1:-3] / k
+  
   return(cv_mi)
 }
