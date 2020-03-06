@@ -4,10 +4,10 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   model <- baseline.model
   
   # Fitting the model to the data:
-  fit <- lavaan::cfa(model, data)
+  # fit <- lavaan::cfa(model, data)
   
   # Obtaining MI values:
-  MIs <- cv_mi(model, data, k = 5, iter = 1)
+  MIs <- cv_modindices(model, data, k)
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
@@ -18,29 +18,29 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   # Specifying a modification to be added to the model:
   mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
   
-  # While loop 
+  # While loop
   while (largest_mi[1, 4] > min.mi) {
-    
+
     # Obtaining the modification to be added to the model:
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
-    
+
     # Adding the modification to the model:
     model <- paste(model, mod, sep = "\n")
-    
+
     # Fitting model to the data:
-    fit <- lavaan::cfa(model, data)
-    
+    # fit <- lavaan::cfa(model, data)
+
     # Obtaining MI values:
-    MIs <- cv_mi(model, data, k = 5, iter = 1)
-    
+    MIs <- cv_modindices(model, data, k)
+
     # Arranging the MIs from largest to smallest:
     MIs <- MIs %>% arrange(-mi)
-    
+
     # Updating largest_mi:
     largest_mi <- MIs[1, ]
-      
+
     }
-    
+
   # Print the final model:
   final_model <- tail(model, 1)
   return(final_model)
