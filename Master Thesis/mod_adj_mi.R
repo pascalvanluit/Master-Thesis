@@ -9,10 +9,8 @@ mod_adj_mi <- function(baseline.model,data, min.mi = 10, ...){
   # Obtaing MI values:
   MIs <- lavaan::modindices(fit)
   
-  # Wrangling the MIs:
-  MIs <- MIs %>%
-    arrange(-mi) %>% 
-    select(lhs, op, rhs, mi)
+  # Arranging the MIs from largest to smallest:
+  MIs <- MIs %>% arrange(-mi)
   
   # Extracting the restricted parameter with the largest MI value:
   largest.mi <- MIs[1, ]
