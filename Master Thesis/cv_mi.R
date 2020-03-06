@@ -1,4 +1,4 @@
-cv_modindices <- function(model, data, k = 5, iter = 1, ...){
+cv_modindices <- function(model, data, k){
   
   # Splitting the dataset into k groups
   n_obs      <- nrow(data)
