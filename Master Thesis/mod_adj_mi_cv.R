@@ -10,7 +10,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   MIs <- cv_modindices(model, data, k)
   
   # Arranging the MIs from largest to smallest:
-  MIs <- MIs %>% arrange(-mi)
+  # MIs <- MIs %>% arrange(-mi)
   
   # Obtaining the restricter parameter with the largest MI value:
   largest_mi <- MIs[1, ]
@@ -34,7 +34,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     MIs <- cv_modindices(model, data, k)
 
     # Arranging the MIs from largest to smallest:
-    MIs <- MIs %>% arrange(-mi)
+    # MIs <- MIs %>% arrange(-mi)
 
     # Updating largest_mi:
     largest_mi <- MIs[1, ]
@@ -48,10 +48,9 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   }
 
   
-  
 
 
-mi_cv <- function(data, model, k, iters = 1) {
+ mi_cv <- function(data, model, k, iters = 1) {
   
   # Splitting the dataset into k groups
   n_obs      <- nrow(data)

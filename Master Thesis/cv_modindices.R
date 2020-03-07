@@ -14,6 +14,7 @@ cv_modindices <- function(model, data, k){
   
   # Loop of fitting model to training set and then to test set to get MI values:
   for (i in 1:k) {
+    
     # Splitting the data:
     train <- data_split %>% filter(fold != i)
     test  <- data_split %>% filter(fold == i)

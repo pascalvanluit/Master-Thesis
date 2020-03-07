@@ -7,8 +7,12 @@ library(tidyverse)
 model <- " visual =~ x1 + x2 + x3
            textual =~ x4 + x5 + x6 "
 
+## Dataset to test and play around with:
+data <- HolzingerSwineford1939
+
 ## Sourcing the functions
 source("mod_adj_mi.R")
+source("cv_modindices.R")
 source("mod_adj_mi_cv.R")
 source("mod_adj_chisq_cv.R")
 
