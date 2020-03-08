@@ -4,13 +4,13 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   model <- baseline.model
   
   # Fitting the model to the data:
-  # fit <- lavaan::cfa(model, data)
+  fit <- lavaan::cfa(model, data)
   
   # Obtaining MI values:
-  MIs <- cv_modindices(model, data, k)
+  MIs <- cv_modindices(fit, model, data, k)
   
   # Arranging the MIs from largest to smallest:
-  # MIs <- MIs %>% arrange(-mi)
+  MIs <- MIs %>% arrange(-mi)
   
   # Obtaining the restricter parameter with the largest MI value:
   largest_mi <- MIs[1, ]
@@ -28,13 +28,13 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     model <- paste(model, mod, sep = "\n")
 
     # Fitting model to the data:
-    # fit <- lavaan::cfa(model, data)
+    fit <- lavaan::cfa(model, data)
 
     # Obtaining MI values:
-    MIs <- cv_modindices(model, data, k)
+    MIs <- cv_modindices(fit, model, data, k)
 
     # Arranging the MIs from largest to smallest:
-    # MIs <- MIs %>% arrange(-mi)
+    MIs <- MIs %>% arrange(-mi)
 
     # Updating largest_mi:
     largest_mi <- MIs[1, ]
@@ -43,7 +43,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
 
   # Print the final model:
   final_model <- tail(model, 1)
-  return(final_model)
+  return(mod)
   
   }
 
@@ -85,4 +85,5 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
   # Fixing up the MI output
   cv_mi[, -1:-3] <- cv_mi[, -1:-3] / k
   return(cv_mi)
+  
 }
