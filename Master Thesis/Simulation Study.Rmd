@@ -14,6 +14,7 @@ set.seed(88)
 library(lavaan)
 library(semPlot)
 library(devtools)
+library(simsem)
 
 devtools::install_github("M-E-Rademaker/cSEM")
 
@@ -36,7 +37,7 @@ DGP.model <- " f1 =~ lambda * x1 + lambda * x2 + lambda * x3 + delta * x4
 fit.DGP <- lavaan::cfa(DGP.model, HolzingerSwineford1939)
 
 # Checking the path diagram:
-semPaths(fit.DGP)
+semPlot::semPaths(fit.DGP)
 ```
 The above attempt does not quite give me what I want. The arrows are simply labelled but i do not think the values are actually in the labels so to speak.
 
@@ -61,13 +62,13 @@ DGP.data.2
 
 DGP.data.2$dgp[[2]]
 ```
-Problem: cannot simulate data with a cross-loading.
+Problem: cannot simulate data with a cross-loading (having one indicator connected to several constructs).
 
 
 Example from lavaan package:
 ```{r}
 # specify population model
-population.model <- ' f1 =~ x1 + 0.8*x2 + 1.2*x3
+population.model <- ' f1 =~ x1 + 0.8*x2 + 1.2*x3 + 0.6*x4
                       f2 =~ x4 + 0.5*x5 + 1.5*x6
                       f3 =~ x7 + 0.1*x8 + 0.9*x9
 
@@ -80,6 +81,12 @@ myData <- simulateData(population.model, sample.nobs = 100L)
 head(myData)
 cov(myData)
 
+# Let's see if this method allows a cross-loading in the simulation:
+fit.lavaan.model <- lavaan::cfa(population.model, HolzingerSwineford1939)
+
+semPlot::semPaths(fit.lavaan.model)
+
+# It does!
 ```
 
 Can data from my model be simulated using lavaan::simulateData?
