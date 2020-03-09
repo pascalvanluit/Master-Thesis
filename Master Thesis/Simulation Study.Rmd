@@ -109,13 +109,65 @@ DGP.data <- lavaan::simulateData(model = DGP.model)
 
 cor <- cor(DGP.data)
 
+fit.lavaan.my.model <- lavaan::cfa(DGP.model, HolzingerSwineford1939)
+
+semPlot::semPaths(fit.lavaan.my.model)
+
 ```
+
+
+
+
+
+
+
 
 
 How about with simsem?
 - simsem requires more set up stuff...
+
+Example 20: Simulation with varying sample size and parameters:
 ```{r}
-?simsem
+loading <- matrix(0, 10, 2)
+loading[1:7, 1] <- NA
+loading[7:10, 2] <- NA
+LY <- bind(loading, "runif(1, 0.3, 0.9)")
+
+RPS <- binds(diag(2))
+
+RTE <- binds(diag(10))
+
+path <- matrix(0, 2, 2)
+path[2, 1] <- NA
+BE <- bind(path, "runif(1, 0, 0.9)")
+
+latentReg <- model(LY = LY, RPS = RPS, RTE = RTE, BE = BE, modelType = "SEM")
+```
+
+```{r}
+Output <- sim(NULL, n = 100, latentReg)
+summary(Output)
+```
+
+
+Set up for simsem method for my model:
+- sample size can be specified in sim function.
+- delta, lambda and rho must be specified in a matrix beforehand.
+```{r}
+# Creating a matrix for all loadings:
+loadings <- matrix(0, 6, 2)
+
+  # Making a space for loadings on f1:
+  loadings[1:4, 1] <- NA
+
+  # Making a space for loadings on f2:
+  loadings[4:6, 2] <- NA
+
+# Creating varying factor loadings:
+rep(seq(from = 0.1, to = 0.7, by = 0.3), 2)
+
+
+
 ```
 
 

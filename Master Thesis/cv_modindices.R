@@ -1,4 +1,4 @@
-cv_modindices <- function(model, data, k){
+cv_modindices <- function(fit, model, data, k = 5){
   
   # Splitting the dataset into k groups
   n_obs      <- nrow(data)
@@ -8,8 +8,7 @@ cv_modindices <- function(model, data, k){
   # Obtaining MI values:
   
   # Fitting the model on the full dataset to create a space where OOS MIs can be saved:
-  fit_full       <- lavaan::cfa(model, data)
-  cv_mi          <- lavaan::modindices(fit_full)
+  cv_mi          <- lavaan::modindices(fit)
   cv_mi[, -1:-3] <- 0
   
   # Loop of fitting model to training set and then to test set to get MI values:
