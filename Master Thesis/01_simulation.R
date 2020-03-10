@@ -20,8 +20,25 @@ GenerateData <- function(lambda, rho, delta, n){
     
   # Specification of lambda matrix:
   LY <- bind(loadings, loadingValues)
+
+##########################################################################
+# Specifying RPS: Residual correlation matrix among endogenous variables #
+##########################################################################
+  # Making space for correlation between latent variables
+  latent.cor <- matrix(NA, 2, 2)
+  diag(latent.cor) <- 1
+  RPS <- binds(latent.cor, rho)
   
-# Specifying RTE: Error correlation matrix among observed variables
+#################################################################################
+# Specifying RTE: Measurement error correlation matrix among observed variables #
+#################################################################################
+  RTE <- binds(diag(6))
+
+#########################
+# Create Model Template #
+#########################
+  model <- model(LY = LY, RPS = RPS, RTE = RTE, modelType = "CFA")
   
   
+      
 }
