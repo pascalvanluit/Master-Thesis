@@ -181,25 +181,20 @@ RTE
 # Covariance between latent (endogenous) variables:
 latent.cor <- matrix(NA, 2, 2)
 diag(latent.cor) <- 1
-RPS <- binds(latent.cor, 0.2)
+RPS <- binds(latent.cor, 0.5)
 RPS
 
-# latentLoadings[1, 2] <- NA
-# latentLoadings[2, 1] <- NA
-# latentLoadingValues <- matrix(0, 2, 2)
-# latentLoadingValues[1, 2] <- 0.7
-# latentLoadingValues[2, 1] <- 0.7
-# RPS <- bind(latentLoadings, latentLoadingValues)
-# RPS
 
-my.model <- simsem::model(LY = LY, RTE = RTE, RPS = RPS, modelType = "CFA")
-sim(10, n = 10, my.model)
+my.model <- model(LY = LY, RTE = RTE, RPS = RPS, modelType = "CFA")
+sim(5, n = 10, my.model)
+
 ```
 
-Creating a matrix of varying conditions of lambda, rho and delta:
+Trying examples of simsem:
 ```{r}
 loading <- matrix(0, 6, 2)
-loading[1:3, 1] <- NA
+loading[1:4, 1] <- NA
+
 loading[4:6, 2] <- NA
 LY <- bind(loading, 0.7)
 LY
@@ -209,13 +204,17 @@ diag(latent.cor) <- 1
 RPS <- binds(latent.cor, 0.5)
 RPS
 
-RTE <- binds(diag(6))
+error.cor <- matrix(0, 6, 6)
+diag(error.cor) <- 1
+RTE <- binds(error.cor)
 RTE
 
-VY <- bind(rep(NA,6),2)
-VY
+CFA.Model <- model(LY = LY, RPS = RPS, RTE = RTE, modelType="CFA")
 
-CFA.Model <- model(LY = LY, RPS = RPS, RTE = RTE, modelType = "CFA")
+Output <- sim(4, n = 40000, CFA.Model)
+dat <- generate(CFA.Model, 100)
+analyze(CFA.Model, dat)
+
 ```
 
 
