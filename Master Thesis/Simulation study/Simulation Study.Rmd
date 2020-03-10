@@ -185,10 +185,10 @@ latentLoadings[2, 1] <- NA
 latentLoadingValues <- matrix(0, 2, 2)
 latentLoadingValues[1, 2] <- 0.7
 latentLoadingValues[2, 1] <- 0.7
-TE <- bind(latentLoadings, latentLoadingValues)
-TE
+RPS <- bind(latentLoadings, latentLoadingValues)
+RPS
 
-my.model <- simsem::model(LY = LY, RPS)
+my.model <- simsem::model(LY = LY, RTE = RTE, RPS = RPS, modelType = "CFA")
 ```
 
 Creating a matrix of varying conditions of lambda, rho and delta:

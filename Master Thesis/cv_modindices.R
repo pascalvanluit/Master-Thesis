@@ -27,7 +27,6 @@ cv_modindices <- function(fit, model, data, k = 5){
     mi_test[is.na(mi_test)] <- 0
      
     # Combining the OOS MI values:
-        
     cv_mi[, -1:-3] <- cv_mi[, -1:-3] + mi_test[, -1:-3]
   }
   
