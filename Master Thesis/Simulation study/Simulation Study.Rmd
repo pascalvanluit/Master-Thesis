@@ -186,8 +186,9 @@ RPS
 
 
 my.model <- model(LY = LY, RTE = RTE, RPS = RPS, modelType = "CFA")
-sim(5, n = 10, my.model)
-
+generate(my.model, 50)
+# sim(5, n = 10, my.model)
+?sim
 ```
 
 Trying examples of simsem:

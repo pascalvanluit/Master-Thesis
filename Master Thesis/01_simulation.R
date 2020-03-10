@@ -37,8 +37,15 @@ GenerateData <- function(lambda, rho, delta, n){
 #########################
 # Create Model Template #
 #########################
-  model <- model(LY = LY, RPS = RPS, RTE = RTE, modelType = "CFA")
-  
-  
+  model <- model.cfa(LY = LY, RPS = RPS, RTE = RTE)
+
+####################
+# Generate dataset #
+####################
+
+  dataset <- generate(model, n) 
+
+return(dataset)
       
 }
+
