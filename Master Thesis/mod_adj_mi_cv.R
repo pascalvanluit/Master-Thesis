@@ -43,7 +43,7 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
 
   # Print the final model:
   final_model <- tail(model, 1)
-  return(mod)
+  return(final_model)
   
   }
 
