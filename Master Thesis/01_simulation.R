@@ -1,5 +1,9 @@
 library(simsem)
 
+########################################
+##### FUNCTION FOR GENERATING DATA #####
+########################################
+
 GenerateData <- function(lambda, rho, delta, n){
   
 ########################################
@@ -45,7 +49,9 @@ GenerateData <- function(lambda, rho, delta, n){
 
   dataset <- generate(model, n) 
 
-return(dataset)
+  return(dataset)
       
 }
+
+cor(GenerateData(0.2, 0.4, 0.9, 1000))
 
