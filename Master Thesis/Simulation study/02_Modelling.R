@@ -13,14 +13,20 @@ source("Methods/cv_modindices.R")
 source("Methods/mod_adj_mi_cv.R")
 source("Methods/mod_adj_chisq_cv.R")
 
-                  ###############################
-                  # Creating lavaan fit objects # 
-                  ###############################
+                 ###############################
+                 # Creating lavaan fit objects # 
+                 ###############################
 
 ##############
 # mod_adj_mi #
 ##############
+for (i in length(sim_data)) {
+  
+  model[i] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 3)
+  
+  print(out)
 
+}
 
 mod_adj_mi(baseline.model = model, data = sim_data[[2]], min.mi = 2)
 
