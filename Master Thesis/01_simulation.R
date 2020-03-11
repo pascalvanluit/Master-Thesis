@@ -8,8 +8,13 @@ conditions <- read_rds(path = "Simulation study/00_conditions.rds")
 ##### FUNCTION FOR GENERATING DATA #####
 ########################################
 
-GenerateData <- function(lambda, rho, delta, n){
+GenerateData <- function(conditions){
   
+  lambda <- conditions[1]
+  rho    <- conditions[2]
+  delta  <- conditions[3]
+  n      <- conditions[4]
+
 ########################################
 # Specifying LY: Factor loading matrix # 
 ########################################
@@ -21,7 +26,7 @@ GenerateData <- function(lambda, rho, delta, n){
     loadings[4:6, 2] <- NA
     
     # Specifying value of loadings
-    loadingValues <- matrix(0, 6, 2)
+    loadingValues         <- matrix(0, 6, 2)
     loadingValues[1:3, 1] <- lambda
     loadingValues[4, 1]   <- delta
     loadingValues[4:6, 2] <- lambda
@@ -51,11 +56,16 @@ GenerateData <- function(lambda, rho, delta, n){
 # Generate dataset #
 ####################
 
-  dataset <- generate(model, n) 
+  dataset <- simsem::generate(model, n, maxDraw = 1000000) 
 
   return(dataset)
       
 }
 
-cor(GenerateData(0.2, 0.4, 0.9, 1000))
 
+############################################
+# Applying the function for each condition #
+############################################
+sim_data <- apply(conditions, 1, FUN = GenerateData)
+
+write_rds(sim_data, path = "Simulation study/01_sim_data.rds")
