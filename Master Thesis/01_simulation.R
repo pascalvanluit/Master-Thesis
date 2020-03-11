@@ -1,4 +1,8 @@
 library(simsem)
+library(tidyverse)
+
+# Import the conditions grid:
+conditions <- read_rds(path = "Simulation study/00_conditions.rds")
 
 ########################################
 ##### FUNCTION FOR GENERATING DATA #####
