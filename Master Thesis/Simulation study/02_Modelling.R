@@ -13,7 +13,6 @@ source("Methods/cv_modindices.R")
 source("Methods/mod_adj_mi_cv.R")
 source("Methods/mod_adj_chisq_cv.R")
 
-
                   ###############################
                   # Creating lavaan fit objects # 
                   ###############################
@@ -23,8 +22,7 @@ source("Methods/mod_adj_chisq_cv.R")
 ##############
 
 
-mod_adj_mi(baseline.model = model, data = sim_data[[2]], min.mi = 0.46)
-
+mod_adj_mi(baseline.model = model, data = sim_data[[2]], min.mi = 2)
 
 #################
 # mod_adj_mi_cv #
