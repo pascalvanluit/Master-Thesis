@@ -1,3 +1,4 @@
+set.seed(88)
 library(simsem)
 library(tidyverse)
 

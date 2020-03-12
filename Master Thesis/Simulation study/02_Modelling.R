@@ -1,6 +1,7 @@
               ####################################
               # Script for using the SEM Methods #
               ####################################
+set.seed(88)
 library(lavaan)
 
 # Starting model used
@@ -20,15 +21,19 @@ source("Methods/mod_adj_chisq_cv.R")
 ##############
 # mod_adj_mi #
 ##############
+models <- vector("list", length(sim_data))
+
 for (i in length(sim_data)) {
   
-  model[i] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 3)
+  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 2)
   
-  print(out)
+  print(models)
 
 }
 
-mod_adj_mi(baseline.model = model, data = sim_data[[2]], min.mi = 2)
+mod_adj_mi(baseline.model = model, data = sim_data[[1]], min.mi = 3)
+
+lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 3)
 
 #################
 # mod_adj_mi_cv #
