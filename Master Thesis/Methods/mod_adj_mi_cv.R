@@ -1,13 +1,13 @@
-mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
+mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
 
   # Saving the baseline.model as model:
   model <- baseline.model
   
   # Fitting the model to the data:
-  fit <- lavaan::cfa(model, data)
+  fit <- lavaan::cfa(model, data, ...)
   
   # Obtaining MI values:
-  MIs <- cv_modindices(fit, model, data, k)
+  MIs <- modindices_cv(fit, model, data, k)
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
@@ -28,10 +28,10 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10){
     model <- paste(model, mod, sep = "\n")
 
     # Fitting model to the data:
-    fit <- lavaan::cfa(model, data)
+    fit <- lavaan::cfa(model, data, ...)
 
     # Obtaining MI values:
-    MIs <- cv_modindices(fit, model, data, k)
+    MIs <- modindices_cv(fit, model, data, k)
 
     # Arranging the MIs from largest to smallest:
     MIs <- MIs %>% arrange(-mi)

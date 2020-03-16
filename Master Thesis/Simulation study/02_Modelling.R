@@ -21,19 +21,22 @@ source("Methods/mod_adj_chisq_cv.R")
 ##############
 # mod_adj_mi #
 ##############
-models <- vector("list", length(sim_data))
+models <- vector("list", length(rev_sim_data))
 
 for (i in length(sim_data)) {
   
-  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 2)
+  models[[i]] <- mod_adj_mi(baseline.model = model, data = rev_sim_data[[i]], min.mi = 3)
   
   print(models)
 
 }
 
-mod_adj_mi(baseline.model = model, data = sim_data[[1]], min.mi = 3)
+rev_sim_data <- rev(sim_data)
 
-lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 3)
+
+mod_adj_mi(baseline.model = model, data = rev_sim_data[[1]], min.mi = 3)
+
+lapply(rev_sim_data, mod_adj_mi, baseline.model = model, min.mi = 3)
 
 #################
 # mod_adj_mi_cv #
