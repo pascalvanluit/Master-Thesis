@@ -1,4 +1,4 @@
-cv_modindices <- function(fit, model, data, k = 5){
+modindinces_cv <- function(fit, model, data, k = 5){
   
   # Splitting the dataset into k groups
   n_obs      <- nrow(data)
@@ -34,4 +34,5 @@ cv_modindices <- function(fit, model, data, k = 5){
   cv_mi[, -1:-3] <- cv_mi[, -1:-3] / k
   
   return(cv_mi)
+  
 }

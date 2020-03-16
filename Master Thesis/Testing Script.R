@@ -11,10 +11,10 @@ model <- " visual =~ x1 + x2 + x3
 data <- HolzingerSwineford1939
 
 ## Sourcing the functions
-source("mod_adj_mi.R")
-source("cv_modindices.R")
-source("mod_adj_mi_cv.R")
-source("mod_adj_chisq_cv.R")
+source("Methods/mod_adj_mi.R")
+source("Methods/modindices_cv.R")
+source("Methods/mod_adj_mi_cv.R")
+source("Methods/mod_adj_chisq_cv.R")
 
 
 # Testing mod_adj_mi()

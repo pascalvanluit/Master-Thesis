@@ -12,7 +12,7 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   pvalues <- rep(0, k - 1)
   
   # Obtaining a modification to be added to the model:
-  MIs <- lavaan::modindices(fit)
+  MIs <- modindices_train(fit, model, data, k)
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
