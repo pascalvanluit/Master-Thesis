@@ -97,54 +97,37 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
 
 mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   
-  # Splitting the data into k groups:
-  n_obs <- nrow(data)
-  group <- rep(1:k, length.out = n_obs)
-  data_split  <- data %>% mutate(folds = sample(group))
-  
   # Specifying the model:
   model <- baseline.model
   
   # Space to save p-values of OOS fits:
   pvalues <- rep(0, k - 1)
   
-  # Fitting the model to the whole dataset:
+  # Fit all the data:
   fit <- lavaan::cfa(model, data)
   
-  # Fitting the model on the full dataset to create a space where MIs can be saved:
-  mi          <- lavaan::modindices(fit, na.remove = FALSE)
-  mi[, -1:-3] <- 0
+  # Obtaining MIs based on training sets:
+  MIs <- modindices_train(fit, model, data, k)
   
-  # Loop of getting mean MI values based on different training sets:
-  for (i in 1:k) {
+  # Arranging the MIs from largest to smallest:
+  MIs <- MIs %>% arrange(-mi)
+  
+  # Obtaining the restricter parameter with the largest MI value:
+  largest_mi <- MIs[1, ]
+  
+  # Specifying a modification to be added to the model:
+  mod <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
     
-    # Splitting the data:
-    train <- data_split %>% filter(folds != i)
-    test  <- data_split %>% filter(folds == i)
+  # Create a test fit:
+  fit_test <- lavaan::cfa(model, test)
     
-    # Create training fit:
-    fit_train <- lavaan::cfa(model, train)
-    
-    # Obtain MI values:
-    mi_train <- lavaan::modindices(fit_train)
-    mi_train[is.na(mi_train)] <- 0
-    
-    # Combining the MI values:
-    mi[, -1:-3] <- mi[, -1:-3] + mi_train[, -1:-3]
-    
-# Need a space here for getting the pvalues found in the test sets:
-    
-    # Create a test fit:
-    fit_test <- lavaan::cfa(model, test)
-    
-    # Obtain pvalue:
-    pvalues[i] <- fitmeasures(fit_test, c("pvalue"))
+  # Obtain pvalue:
+  pvalues[i] <- fitmeasures(fit_test, c("pvalue"))
     
   }
   
-  # Fixing up the MI output
-  cv_mi[, -1:-3] <- cv_mi[, -1:-3] / k
   
-}
+  
+
 
 
