@@ -16,7 +16,6 @@ modindices_train <- function(fit, model, data, k){
     
     # Splitting the data:
     train <- data_split %>% filter(fold != i)
-    test  <- data_split %>% filter(fold == i)
     
     # Creating train and test fits:
     fit_train <- lavaan::cfa(model, train)
@@ -31,6 +30,25 @@ modindices_train <- function(fit, model, data, k){
   
   # Fixing up the MI output
   mi[, -1:-3] <- mi[, -1:-3] / k
+  
+  # Specify modification to be added to the model:
+  
+  
+  # Loop for finding average chi-square fit on test sets:
+  for (i in 1:k) {
+    
+    # Obtaining test sets:
+    test <- data_split %>% filter(fold == i)
+    
+    # 
+    
+  }
+  
+  # Another for loop finding average chi square fit on the test sets
+  # after adding the modification.
+  # obtain average OOS chi square statistic. (same info as p value)
+  # 
+  # p value as criterion for adding mod or not.
   
   return(mi)
 }
