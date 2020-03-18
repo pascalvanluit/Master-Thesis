@@ -8,6 +8,10 @@ modindices_train <- function(fit, model, data, k){
   # Obtaining MI values:
   
   # Fitting the model on the full dataset to create a space where train MIs can be saved:
+  fit         <- lavaan::cfa(model, data)
+  chisq       <- lavaan::fitmeasures(fit, c("chisq"))
+  chisq       <- 0
+  
   mi          <- lavaan::modindices(fit, na.remove = FALSE)
   mi[, -1:-3] <- 0
   
@@ -32,7 +36,10 @@ modindices_train <- function(fit, model, data, k){
   mi[, -1:-3] <- mi[, -1:-3] / k
   
   # Specify modification to be added to the model:
-  
+  mi         <- mi %>% arrange(-mi)
+  largest_mi <- mi[1, ]
+  mod        <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
+  model      <- 
   
   # Loop for finding average chi-square fit on test sets:
   for (i in 1:k) {
@@ -40,9 +47,17 @@ modindices_train <- function(fit, model, data, k){
     # Obtaining test sets:
     test <- data_split %>% filter(fold == i)
     
-    # 
+    # fitting the model to the test set:
+    fit_test <- lavaan::cfa(model, test)
+    
+    # Obtaining the chi-square fit measure:
+    chisq_test <- lavaan::fitmeasures(fit_test, c("chisq"))
+    chisq      <- chisq + chisq_test
     
   }
+  
+  # Obtaining average chi-square
+  chisq <- chisq / k 
   
   # Another for loop finding average chi square fit on the test sets
   # after adding the modification.
