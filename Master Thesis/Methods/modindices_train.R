@@ -34,12 +34,13 @@ modindices_train <- function(fit, model, data, k){
   
   # Fixing up the MI output
   mi[, -1:-3] <- mi[, -1:-3] / k
+  mi <- mi
   
   # Specify modification to be added to the model:
   mi         <- mi %>% arrange(-mi)
   largest_mi <- mi[1, ]
   mod        <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
-  model      <- 
+  model      <- paste(model, mod, sep = "\n")
   
   # Loop for finding average chi-square fit on test sets:
   for (i in 1:k) {
@@ -65,5 +66,5 @@ modindices_train <- function(fit, model, data, k){
   # 
   # p value as criterion for adding mod or not.
   
-  return(mi)
+  # return(chisq)
 }

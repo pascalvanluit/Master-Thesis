@@ -1,6 +1,4 @@
 
-###############################
-
 mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   
   # Specifying the model:
