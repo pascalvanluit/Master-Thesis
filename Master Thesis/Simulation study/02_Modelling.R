@@ -10,7 +10,7 @@ model <- " f1 =~ y1 + y2 + y3
 
 # Sourcing my functions
 source("Methods/mod_adj_mi.R")
-source("Methods/cv_modindices.R")
+source("Methods/modindices_cv.R")
 source("Methods/mod_adj_mi_cv.R")
 source("Methods/mod_adj_chisq_cv.R")
 
@@ -21,15 +21,20 @@ source("Methods/mod_adj_chisq_cv.R")
 ##############
 # mod_adj_mi #
 ##############
-models <- vector("list", length(rev_sim_data))
+models <- vector("list", length(sim_data))
 
 for (i in length(sim_data)) {
   
-  models[[i]] <- mod_adj_mi(baseline.model = model, data = rev_sim_data[[i]], min.mi = 3)
+  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 3)
   
   print(models)
 
 }
+
+
+lapply(models, lavaan::cfa, data = sim_data)
+
+
 
 rev_sim_data <- rev(sim_data)
 
