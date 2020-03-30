@@ -31,23 +31,30 @@ for (i in length(rev_sim_data)) {
 
 }
 
+rev_sim_data <- rev(sim_data)
 
-lapply(models, lavaan::cfa, data = rev_sim_data)
+mod_adj_mi(baseline.model = model, data = rev_sim_data[[1]], min.mi = 3)
+
+lapply(rev_sim_data, mod_adj_mi, baseline.model = model, min.mi = 3)
+
+
+
+
+lapply(models, lavaan::cfa, data = sim_data)
 
 # How to extract estimate of PoI:
 # Using subset()
 subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f2")
  # where 'sum' is the summary of a fit object.
 
+# Comparing the estimated PoI to the true value:
+true_rho <- conditions[[1,2]]
+est_rho  <- subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f1")
+mse <- sum((true_rho - est_rho)^2)
+mse
 
 
 
-rev_sim_data <- rev(sim_data)
-
-
-mod_adj_mi(baseline.model = model, data = rev_sim_data[[1]], min.mi = 3)
-
-lapply(rev_sim_data, mod_adj_mi, baseline.model = model, min.mi = 3)
 
 #################
 # mod_adj_mi_cv #
