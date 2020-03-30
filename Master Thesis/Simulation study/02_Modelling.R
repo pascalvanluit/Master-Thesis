@@ -23,16 +23,22 @@ source("Methods/mod_adj_chisq_cv.R")
 ##############
 models <- vector("list", length(sim_data))
 
-for (i in length(sim_data)) {
+for (i in length(rev_sim_data)) {
   
-  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 3)
+  models[[i]] <- mod_adj_mi(baseline.model = model, data = rev_sim_data[[i]], min.mi = 3)
   
   print(models)
 
 }
 
 
-lapply(models, lavaan::cfa, data = sim_data)
+lapply(models, lavaan::cfa, data = rev_sim_data)
+
+# How to extract estimate of PoI:
+# Using subset()
+subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f2")
+ # where 'sum' is the summary of a fit object.
+
 
 
 
