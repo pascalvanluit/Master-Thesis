@@ -28,23 +28,6 @@ models_mod_adj_mi <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi
 # Creating a fit object for each model:
 fits_mod_adj_mi <- lapply(models_mod_adj_mi, lavaan::cfa)
 
-# Obtaining the summary of each fit:
-sums_mod_adj_mi <- lapply(fits_mod_adj_mi, summary)
-
-# Obtaining the parameter of interest from each fit summary:
-pois_mod_adj_mi <- subset(sums_mod_adj_mi$PE$est, sums_mod_adj_mi$PE$lhs == "f1" & sums_mod_adj_mi$PE$rhs == "f2")
-
-# Finding the MSE of the PoI:
-mse_mod_adj_mi <- pois_mod_adj_mi - conditions[[1, 2]]
-
-
-# Comparing the estimated PoI to the true value:
-true_rho <- conditions[[1,2]]
-est_rho  <- subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f1")
-mse <- sum((true_rho - est_rho)^2)
-mse
-
-
 
 #################
 # mod_adj_mi_cv #
@@ -66,3 +49,62 @@ models_mod_adj_chisq_cv <- lapply(sim_data, mod_adj_chisq_cv, baseline.model = m
 
 # Creating a fit object for each model:
 fits_mod_adj_chisq_cv <- lapply(models_mod_adj_chisq_cv, lavaan::cfa)
+
+
+
+                  ##############################################
+                  # Obtaining MSE of the Parameter of Interest # 
+                  ##############################################
+
+##############
+# mod_adj_mi #
+##############
+
+# Obtaining the summary of each fit:
+sums_mod_adj_mi <- lapply(fits_mod_adj_mi, summary)
+
+# Obtaining the parameter of interest from each fit summary:
+pois_mod_adj_mi <- subset(sums_mod_adj_mi$PE$est, sums_mod_adj_mi$PE$lhs == "f1" & sums_mod_adj_mi$PE$rhs == "f2")
+
+# Finding the MSE of the PoI:
+mse_mod_adj_mi <- pois_mod_adj_mi - conditions[[1, 2]]
+
+
+#################
+# mod_adj_mi_cv #
+#################
+
+# Obtaining the summary of each fit:
+sums_mod_adj_mi_cv <- lapply(fits_mod_adj_mi_cv, summary)
+
+# Obtaining the parameter of interest from each fit summary:
+pois_mod_adj_mi_cv <- subset(sums_mod_adj_mi_cv$PE$est, sums_mod_adj_mi_cv$PE$lhs == "f1" & sums_mod_adj_mi_cv$PE$rhs == "f2")
+
+# Finding the MSE of the PoI:
+mse_mod_adj_mi_cv <- pois_mod_adj_mi_cv - conditions[[1, 2]]
+
+
+####################
+# mod_adj_chisq_cv #
+####################
+
+# Obtaining the summary of each fit:
+sums_mod_adj_chisq_cv <- lapply(fits_mod_adj_mi_cv, summary)
+
+# Obtaining the parameter of interest from each fit summary:
+pois_mod_adj_chisq_cv <- subset(sums_mod_adj_chisq_cv$PE$est, sums_mod_adj_chisq_cv$PE$lhs == "f1" & sums_mod_adj_mi_cv$PE$rhs == "f2")
+
+# Finding the MSE of the PoI:
+mse_mod_adj_chisq_cv <- pois_mod_adj_chisq_cv - conditions[[1, 2]]
+
+
+
+
+
+
+
+
+
+
+
+
