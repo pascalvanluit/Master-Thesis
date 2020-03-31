@@ -35,29 +35,8 @@ sums_mod_adj_mi <- lapply(fits_mod_adj_mi, summary)
 pois_mod_adj_mi <- subset(sums_mod_adj_mi$PE$est, sums_mod_adj_mi$PE$lhs == "f1" & sums_mod_adj_mi$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi <- pois_mod_adj_mi - conditions
+mse_mod_adj_mi <- pois_mod_adj_mi - conditions[[1, 2]]
 
-
-
-for (i in length(sim_data)) {
-  
-  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = 3)
-  
-  print(models)
-
-}
-
-mod_adj_mi(baseline.model = model, data = sim_data[[4]], min.mi = 10)
-
-lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 20)
-
-lapply(models, lavaan::cfa, data = sim_data)
-
-
-# How to extract estimate of PoI:
-# Using subset()
-subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f2")
- # where 'sum' is the summary of a fit object.
 
 # Comparing the estimated PoI to the true value:
 true_rho <- conditions[[1,2]]
@@ -65,13 +44,6 @@ est_rho  <- subset(sum$PE$est, sum$PE$lhs == "f1" & sum$PE$rhs == "f1")
 mse <- sum((true_rho - est_rho)^2)
 mse
 
-
-modelling_mod_adj_mi <- function(model = model, min.mi = 10){
-  
-  # Using the mod_adj_mi function to specify models:
-  models[[i]] <- mod_adj_mi(baseline.model = model, data = sim_data[[i]], min.mi = min.mi)
-  
-}
 
 
 #################
