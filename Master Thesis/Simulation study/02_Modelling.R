@@ -98,13 +98,26 @@ pois_mod_adj_chisq_cv <- subset(sums_mod_adj_chisq_cv$PE$est, sums_mod_adj_chisq
 mse_mod_adj_chisq_cv <- pois_mod_adj_chisq_cv - conditions[[1, 2]]
 
 
+              ###################################################
+              # Obtaining the covariance matrix of each dataset # 
+              ###################################################
+
+##############
+# mod_adj_mi #
+##############
+covmats_mod_adj_mi <- lapply(fits_mod_adj_mi, fitted)
 
 
+#################
+# mod_adj_mi_cv #
+#################
+covmats_mod_adj_mi_cv <- lapply(fits_mod_adj_mi_cv, fitted)
 
 
-
-
-
+####################
+# mod_adj_chisq_cv #
+####################
+covmats_mod_adj_chisq_cv <- lapply(fits_mod_adj_chisq_cv, fitted)
 
 
 
