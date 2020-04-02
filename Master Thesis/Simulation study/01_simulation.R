@@ -59,7 +59,7 @@ GenerateData <- function(conditions){
 
   dataset <- simsem::generate(model, n, maxDraw = 1000000) 
 
-  return(dataset)
+  #return(dataset)
       
 }
 
