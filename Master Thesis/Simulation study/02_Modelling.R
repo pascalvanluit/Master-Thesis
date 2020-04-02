@@ -12,6 +12,7 @@ model <- " f1 =~ y1 + y2 + y3
 source("Methods/mod_adj_mi.R")
 source("Methods/modindices_cv.R")
 source("Methods/mod_adj_mi_cv.R")
+source("Methods/modindices_train.R")
 source("Methods/mod_adj_chisq_cv.R")
 
                  ###############################
@@ -67,7 +68,9 @@ sums_mod_adj_mi <- lapply(fits_mod_adj_mi, summary)
 pois_mod_adj_mi <- subset(sums_mod_adj_mi$PE$est, sums_mod_adj_mi$PE$lhs == "f1" & sums_mod_adj_mi$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi <- pois_mod_adj_mi - conditions[[1, 2]]
+mse_mod_adj_mi <- pois_mod_adj_mi - conditions[[1, 2]]#############
+####################
+########CHECK HERE#######
 
 
 #################
