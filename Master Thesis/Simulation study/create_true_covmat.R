@@ -22,6 +22,10 @@ create_true_covmat <- function(conditions) {
   return(Sigma)
 }
 
-apply(conditions, 1, create_true_covmat)
-apply(conditions, 1, GenerateData)
-conditions
+rot.conditions <- t(apply(conditions, 2, rev))
+
+sapply(rot.conditions, create_true_covmat, simplify = FALSE)
+
+lapply(rot.conditions, create_true_covmat)
+
+apply(rot.conditions, 2, create_true_covmat)
