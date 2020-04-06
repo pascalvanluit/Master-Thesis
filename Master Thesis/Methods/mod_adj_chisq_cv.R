@@ -1,5 +1,5 @@
 source("Methods/modindices_train.R")
-mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
+mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .05, ...){
   
   # Specifying the model:
   model <- baseline.model
@@ -7,12 +7,11 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   # Fit all the data:
   fit <- lavaan::cfa(model, data)
   
-  # Obtain cross-validated OOS chisq values:
-  oos.chisq <- oos.chisq(model, data, k, min.mi)
+  # Obtain OOS MIs:
+  oos.pvalue <- oos.pvalue(fit, model, data, k)
   
-  # Define chisq
-  
-  while (oos.chisq < alpha) {
+  while (largest_mi < min.mi) {
+    
     
   }
   

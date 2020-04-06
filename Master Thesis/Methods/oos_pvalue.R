@@ -1,4 +1,4 @@
-modindices_train <- function(fit, model, data, k){
+oos_pvalue <- function(fit, model, data, k){
 
 #######################################
 # Splitting the dataset into k groups #
@@ -38,9 +38,8 @@ modindices_train <- function(fit, model, data, k){
     mi[, -1:-3] <- mi[, -1:-3] + mi_train[, -1:-3]
   }
   
-  # Fixing up the MI output
+  # Finding the average MI:
   mi[, -1:-3] <- mi[, -1:-3] / k
-  mi <- mi
   
   # Specify modification to be added to the model:
   mi         <- mi %>% arrange(-mi)
@@ -64,9 +63,9 @@ modindices_train <- function(fit, model, data, k){
   }
   
   # Obtaining average chi-square
-  chisq <- chisq / k 
+  pvalue <- pvalue / k 
   
-  return(chisq)
+  return(pvalue)
   
   # p value OR chisq as criterion for adding mod or not.
   # How do i make the chisq value a criterion? need to define how it is used as a cutoff in the while function.
