@@ -1,14 +1,22 @@
-
+source("Methods/modindices_train.R")
 mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   
   # Specifying the model:
   model <- baseline.model
   
-        # Space to save p-values of OOS fits:
-        pvalues <- rep(0, k - 1)
-  
   # Fit all the data:
   fit <- lavaan::cfa(model, data)
+  
+  # Obtain cross-validated OOS chisq values:
+  oos.chisq <- oos.chisq(model, data, k, min.mi)
+  
+  # Define chisq
+  
+  while (oos.chisq < alpha) {
+    
+  }
+  
+  
   
   # Obtaining MIs based on training sets:
   MIs <- modindices_train(fit, model, data, k)

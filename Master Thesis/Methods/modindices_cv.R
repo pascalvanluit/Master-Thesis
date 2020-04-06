@@ -1,11 +1,16 @@
-modindinces_cv <- function(fit, model, data, k = 5){
+modindices_cv <- function(fit, model, data, k){
+
+#######################################  
+# Splitting the dataset into k groups #
+#######################################
   
-  # Splitting the dataset into k groups
   n_obs      <- nrow(data)
   select_vec <- rep(1:k, length.out = n_obs)
   data_split <- data %>% mutate(fold = sample(select_vec))
   
-  # Obtaining MI values:
+#######################
+# Obtaining MI values #
+#######################
   
   # Fitting the model on the full dataset to create a space where OOS MIs can be saved:
   cv_mi          <- lavaan::modindices(fit, na.remove = FALSE)

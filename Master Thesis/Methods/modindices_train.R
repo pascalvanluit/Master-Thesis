@@ -1,16 +1,22 @@
 modindices_train <- function(fit, model, data, k){
+
+#######################################
+# Splitting the dataset into k groups #
+#######################################
   
-  # Splitting the dataset into k groups
   n_obs      <- nrow(data)
   select_vec <- rep(1:k, length.out = n_obs)
   data_split <- data %>% mutate(fold = sample(select_vec))
+
   
-  # Obtaining MI values:
+#######################
+# Obtaining MI values #
+#######################
   
   # Fitting the model on the full dataset to create a space where train MIs can be saved:
   fit         <- lavaan::cfa(model, data)
-  chisq       <- lavaan::fitmeasures(fit, c("chisq"))
-  chisq       <- 0
+  pvalue      <- lavaan::fitmeasures(fit, c("pvalue"))
+  pvalue      <- 0
   
   mi          <- lavaan::modindices(fit, na.remove = FALSE)
   mi[, -1:-3] <- 0
@@ -28,7 +34,7 @@ modindices_train <- function(fit, model, data, k){
     mi_train <- lavaan::modindices(fit_train, na.remove = FALSE)
     mi_train[is.na(mi_train)] <- 0
     
-    # Combining the OOS MI values:
+    # Combining the MI values:
     mi[, -1:-3] <- mi[, -1:-3] + mi_train[, -1:-3]
   }
   
@@ -49,22 +55,20 @@ modindices_train <- function(fit, model, data, k){
     test <- data_split %>% filter(fold == i)
     
     # fitting the model to the test set:
-    fit_test <- lavaan::cfa(model, test)
+    fit_test <- lavaan::cfa(model, test, optim.force.converged = TRUE)
     
     # Obtaining the chi-square fit measure:
-    chisq_test <- lavaan::fitmeasures(fit_test, c("chisq"))
-    chisq      <- chisq + chisq_test
+    pvalue_test <- lavaan::fitmeasures(fit_test, c("pvalue"))
+    pvalue      <- pvalue + pvalue_test
     
   }
   
   # Obtaining average chi-square
   chisq <- chisq / k 
   
-  # Another for loop finding average chi square fit on the test sets
-  # after adding the modification.
-  # obtain average OOS chi square statistic. (same info as p value)
-  # 
-  # p value as criterion for adding mod or not.
+  return(chisq)
   
-  # return(chisq)
+  # p value OR chisq as criterion for adding mod or not.
+  # How do i make the chisq value a criterion? need to define how it is used as a cutoff in the while function.
+  
 }

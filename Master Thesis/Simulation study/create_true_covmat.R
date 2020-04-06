@@ -1,8 +1,8 @@
 create_true_covmat <- function(conditions) {
   
-  lambda <- conditions[1]
-  rho    <- conditions[2]
-  delta  <- conditions[3]
+  lambda <- conditions[, 1]
+  rho    <- conditions[, 2]
+  delta  <- conditions[, 3]
   
   Lambda <- matrix(c(
     lambda, lambda,
@@ -21,6 +21,9 @@ create_true_covmat <- function(conditions) {
   
   return(Sigma)
 }
+
+pmap(conditions, create_true_covmat)
+
 
 rot.conditions <- t(apply(conditions, 2, rev))
 

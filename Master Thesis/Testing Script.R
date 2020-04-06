@@ -14,6 +14,7 @@ data <- HolzingerSwineford1939
 source("Methods/mod_adj_mi.R")
 source("Methods/modindices_cv.R")
 source("Methods/mod_adj_mi_cv.R")
+source("Methods/modindices_train.R")
 source("Methods/mod_adj_chisq_cv.R")
 
 
