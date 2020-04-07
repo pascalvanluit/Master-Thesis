@@ -1,4 +1,4 @@
-oos_pvalue <- function(fit, model, data, k){
+modindices_train <- function(fit, model, data, k){
 
 #######################################
 # Splitting the dataset into k groups #
@@ -46,7 +46,11 @@ oos_pvalue <- function(fit, model, data, k){
   largest_mi <- mi[1, ]
   mod        <- paste(largest_mi[1, 1], largest_mi[1, 2], largest_mi[1, 3], sep = " ")
   model      <- paste(model, mod, sep = "\n")
-  
+
+######################
+# Obtaining OOS fits #
+######################  
+
   # Loop for finding average chi-square fit on test sets:
   for (i in 1:k) {
     
@@ -65,7 +69,11 @@ oos_pvalue <- function(fit, model, data, k){
   # Obtaining average chi-square
   pvalue <- pvalue / k 
   
-  return(pvalue)
+  # Creating mi_stop; this makes the largest_mi -1 so that no more modifications are added:
+  mi_stop <- data.frame(lhs = NA, op = '=', rhs = NA, mi = -1)
+  
+  ifelse(pvalue < .5, return(mi), return(mi_stop))
+  
   
   # p value OR chisq as criterion for adding mod or not.
   # How do i make the chisq value a criterion? need to define how it is used as a cutoff in the while function.
