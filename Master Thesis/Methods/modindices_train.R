@@ -72,10 +72,8 @@ modindices_train <- function(fit, model, data, k){
   # Creating mi_stop; this makes the largest_mi -1 so that no more modifications are added:
   mi_stop <- data.frame(lhs = NA, op = '=', rhs = NA, mi = -1)
   
+  # Return MIs:
   ifelse(pvalue < .5, return(mi), return(mi_stop))
   
-  
-  # p value OR chisq as criterion for adding mod or not.
-  # How do i make the chisq value a criterion? need to define how it is used as a cutoff in the while function.
   
 }
