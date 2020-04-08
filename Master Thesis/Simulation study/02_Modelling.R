@@ -26,6 +26,17 @@ source("Methods/mod_adj_chisq_cv.R")
 # Applying mod_adj_mi to each simulated dataset:
 models_mod_adj_mi_4 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 4)
 
+models <- list(NA)
+
+for (i in 1:length(sim_data)) {
+  
+  list[i] <- mod_adj_mi(sim_data[[i]])
+  return(list)
+  
+}
+
+
+
 # Creating a fit object for each model:
 fits_mod_adj_mi_4 <- lapply(models_mod_adj_mi, lavaan::cfa)
 
