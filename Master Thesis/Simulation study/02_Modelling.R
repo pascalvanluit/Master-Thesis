@@ -79,9 +79,7 @@ sums_mod_adj_mi_4 <- lapply(fits_mod_adj_mi_4, summary)
 pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4$PE$est, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi_4 <- pois_mod_adj_mi_4 - conditions[[1, 2]]#############
-####################
-########CHECK HERE#######
+mse_mod_adj_mi_4 <- pois_mod_adj_mi_4 - conditions[, 2]
 
 
 #################
@@ -95,8 +93,7 @@ sums_mod_adj_mi_10 <- lapply(fits_mod_adj_mi_10, summary)
 pois_mod_adj_mi_10 <- subset(sums_mod_adj_mi_10$PE$est, sums_mod_adj_mi_10$PE$lhs == "f1" & sums_mod_adj_mi_10$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi_10 <- pois_mod_adj_mi_10 - conditions[[1, 2]]
-
+mse_mod_adj_mi_10 <- pois_mod_adj_mi_10 - conditions[, 2]
 
 
 #################
@@ -110,7 +107,7 @@ sums_mod_adj_mi_cv <- lapply(fits_mod_adj_mi_cv, summary)
 pois_mod_adj_mi_cv <- subset(sums_mod_adj_mi_cv$PE$est, sums_mod_adj_mi_cv$PE$lhs == "f1" & sums_mod_adj_mi_cv$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi_cv <- pois_mod_adj_mi_cv - conditions[[1, 2]]
+mse_mod_adj_mi_cv <- pois_mod_adj_mi_cv - conditions[, 2]
 
 
 ####################
@@ -124,7 +121,7 @@ sums_mod_adj_chisq_cv <- lapply(fits_mod_adj_mi_cv, summary)
 pois_mod_adj_chisq_cv <- subset(sums_mod_adj_chisq_cv$PE$est, sums_mod_adj_chisq_cv$PE$lhs == "f1" & sums_mod_adj_mi_cv$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_chisq_cv <- pois_mod_adj_chisq_cv - conditions[[1, 2]]
+mse_mod_adj_chisq_cv <- pois_mod_adj_chisq_cv - conditions[, 2]
 
 
               ###################################################

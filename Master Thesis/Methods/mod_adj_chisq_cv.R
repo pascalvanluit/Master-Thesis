@@ -1,4 +1,3 @@
-source("Methods/oos_pvalue.R")
 mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .05, ...){
   
   # Specifying the model:
@@ -29,7 +28,7 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
     model <- paste(model, mod, sep = "\n")
     
     # Fitting model to the data
-    fit <- lavaan::cfa(model, data, ...)
+    fit <- lavaan::cfa(model, data, check.gradient = FALSE, optim.force.converged = TRUE, ...)
     
     # Obtaining MI values:
     MIs <- modindices_train(fit, model, data, k)

@@ -58,9 +58,9 @@ modindices_train <- function(fit, model, data, k){
     test <- data_split %>% filter(fold == i)
     
     # fitting the model to the test set:
-    fit_test <- lavaan::cfa(model, test, optim.force.converged = TRUE)
+    fit_test <- lavaan:::cfa(model, test, optim.force.converged = TRUE, check.gradient = FALSE)
     
-    # Obtaining the chi-square fit measure:
+    # Obtaining the pvalue (significance) of chi-square fit measure:
     pvalue_test <- lavaan::fitmeasures(fit_test, c("pvalue"))
     pvalue      <- pvalue + pvalue_test
     

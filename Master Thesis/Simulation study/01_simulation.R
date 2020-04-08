@@ -73,3 +73,4 @@ sim_data <- apply(conditions, 1, FUN = GenerateData)
 # Exporting the simulated data sets #
 #####################################
 write_rds(sim_data, path = "Simulation study/01_sim_data.rds")
+

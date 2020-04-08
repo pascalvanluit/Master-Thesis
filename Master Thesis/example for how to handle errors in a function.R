@@ -16,4 +16,6 @@ mi_cv_adj <- function() {
   
   "volgende model"
 }
-
+?stop
+?try
+?inherits
