@@ -11,7 +11,8 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
   if(inherits(MIs, "try-error"))
     {
-    return(model)
+    out1 <- list(model = model, fit = fit)
+    return(out1)
   }
   
   # Arranging the MIs from largest to smallest:
@@ -39,7 +40,8 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
     MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
     if(inherits(MIs, "try-error"))
       {
-      return(model)
+      out2 <- list(model = model, fit = fit)
+      return(out2)
     }
 
     # Arranging the MIs from largest to smallest:
@@ -51,8 +53,10 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
     }
 
   # Print the final model:
-  final_model <- tail(model, 1)
-  return(final_model)
+  final.model <- tail(model, 1)
+  out3 <- list(model = final.model, fit = fit)
+  
+  return(out3)
   
   }
 

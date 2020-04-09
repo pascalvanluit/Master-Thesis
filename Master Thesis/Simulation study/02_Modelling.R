@@ -52,11 +52,14 @@ fits_mod_adj_mi_10 <- lapply(out_mod_adj_mi_10, `[`, c('fit'))
 # mod_adj_mi_cv #
 #################
 
-# Applying mod_adj_mi_cv to each simulated dataset:
-models_mod_adj_mi_cv <- lapply(sim_data, mod_adj_mi_cv, baseline.model = model, min.mi = 10, k = 2)
+# Applying function to each dataset:
+out_mod_adj_mi_cv <- lapply(sim_data, mod_adj_mi_cv, baseline.model = model, min.mi = 10)
 
-# Creating a fit object for each model:
-fits_mod_adj_mi_cv <- lapply(models_mod_adj_mi_cv, lavaan::cfa)
+# Obtaining all the models:
+models_mod_adj_mi_cv <- lapply(out_mod_adj_mi_cv, `[`, c('model'))
+
+# Obtaining a fit object from each model:
+fits_mod_adj_mi_cv <- lapply(out_mod_adj_mi_cv, `[`, c('fit'))
 
 
 ####################
