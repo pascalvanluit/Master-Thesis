@@ -3,6 +3,7 @@
               ####################################
 set.seed(88)
 library(lavaan)
+library(plyr)
 
 # Starting model used
 model <- " f1 =~ y1 + y2 + y3
@@ -23,30 +24,28 @@ source("Methods/mod_adj_chisq_cv.R")
 # mod_adj_mi_4 #
 ################
 
-# Applying mod_adj_mi to each simulated dataset:
-models_mod_adj_mi_4 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 4)
-comb <- cbind(sim_data = sim_data, models_mod_adj_mi_4 = models_mod_adj_mi_4)
+# Applying function to each dataset:
+out_mod_adj_mi_4 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 4)
 
+# Obtaining all the models:
+models_mod_adj_mi_4 <- lapply(out_mod_adj_mi_4, `[`, c('model'))
 
-fits <- mapply(lavaan::cfa, model = comb[,1], data = comb[,2])
-
-
-
-
-fits_mod_adj_mi_4 <- lapply(models_mod_adj_mi_4, lavaan::cfa, data = sim_data[[]])
-
-cfa(model = models_mod_adj_mi_4[[2]], data = sim_data[[2]], optim.force.converged = TRUE)
+# Obtaining a fit object from each model:
+fits_mod_adj_mi_4 <- lapply(out_mod_adj_mi_4, `[`, c('fit'))
 
 
 #################
 # mod_adj_mi_10 #
 #################
 
-# Applying mod_adj_mi to each simulated dataset:
-models_mod_adj_mi_10 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 10)
+# Applying function to each dataset:
+out_mod_adj_mi_10 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 10)
 
-# Creating a fit object for each model:
-fits_mod_adj_mi_10 <- lapply(models_mod_adj_mi_10, lavaan::cfa)
+# Obtaining all the models:
+models_mod_adj_mi_10 <- lapply(out_mod_adj_mi_10, `[`, c('model'))
+
+# Obtaining a fit object from each model:
+fits_mod_adj_mi_10 <- lapply(out_mod_adj_mi_10, `[`, c('fit'))
 
 
 #################
