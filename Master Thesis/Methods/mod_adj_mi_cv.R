@@ -8,7 +8,11 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
   fit <- lavaan::cfa(model, data, ...)
   
   # Obtaining MI values:
-  MIs <- modindices_cv(fit, model, data, k)
+  MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
+  if(inherits(MIs, "try-error"))
+    {
+    return(model)
+  }
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
@@ -32,7 +36,11 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
     fit <- lavaan::cfa(model, data, ...)
 
     # Obtaining MI values:
-    MIs <- modindices_cv(fit, model, data, k)
+    MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
+    if(inherits(MIs, "try-error"))
+      {
+      return(model)
+    }
 
     # Arranging the MIs from largest to smallest:
     MIs <- MIs %>% arrange(-mi)

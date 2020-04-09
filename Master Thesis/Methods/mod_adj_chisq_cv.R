@@ -7,7 +7,11 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
   fit <- lavaan::cfa(model, data)
 
   # Obtain MIs from training set and only accept if OOS fit is significant on average:
-  MIs <- modindices_train(fit, model, data, k)
+  MIs <- try(modindices_train(fit, model, data, k), silent = TRUE)
+  if(inherits(MIs, "try-error"))
+    {
+    return(model)
+  }
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
@@ -31,7 +35,11 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
     fit <- lavaan::cfa(model, data, check.gradient = FALSE, optim.force.converged = TRUE, ...)
     
     # Obtaining MI values:
-    MIs <- modindices_train(fit, model, data, k)
+    MIs <- MIs <- try(modindices_train(fit, model, data, k), silent = TRUE)
+    if(inherits(MIs, "try-error"))
+     {
+      return(model)
+    }
     
     # Arranging the MIs from largest to smallest:
     MIs <- MIs %>% arrange(-mi)

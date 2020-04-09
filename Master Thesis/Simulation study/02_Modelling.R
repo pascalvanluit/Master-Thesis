@@ -25,20 +25,17 @@ source("Methods/mod_adj_chisq_cv.R")
 
 # Applying mod_adj_mi to each simulated dataset:
 models_mod_adj_mi_4 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 4)
+comb <- cbind(sim_data = sim_data, models_mod_adj_mi_4 = models_mod_adj_mi_4)
 
-models <- list(NA)
 
-for (i in 1:length(sim_data)) {
-  
-  list[i] <- mod_adj_mi(sim_data[[i]])
-  return(list)
-  
-}
+fits <- mapply(lavaan::cfa, model = comb[,1], data = comb[,2])
 
 
 
-# Creating a fit object for each model:
-fits_mod_adj_mi_4 <- lapply(models_mod_adj_mi, lavaan::cfa)
+
+fits_mod_adj_mi_4 <- lapply(models_mod_adj_mi_4, lavaan::cfa, data = sim_data[[]])
+
+cfa(model = models_mod_adj_mi_4[[2]], data = sim_data[[2]], optim.force.converged = TRUE)
 
 
 #################
@@ -49,7 +46,7 @@ fits_mod_adj_mi_4 <- lapply(models_mod_adj_mi, lavaan::cfa)
 models_mod_adj_mi_10 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 10)
 
 # Creating a fit object for each model:
-fits_mod_adj_mi_10 <- lapply(models_mod_adj_mi, lavaan::cfa)
+fits_mod_adj_mi_10 <- lapply(models_mod_adj_mi_10, lavaan::cfa)
 
 
 #################
@@ -57,7 +54,7 @@ fits_mod_adj_mi_10 <- lapply(models_mod_adj_mi, lavaan::cfa)
 #################
 
 # Applying mod_adj_mi_cv to each simulated dataset:
-models_mod_adj_mi_cv <- lapply(sim_data, mod_adj_mi_cv, baseline.model = model, min.mi = 10)
+models_mod_adj_mi_cv <- lapply(sim_data, mod_adj_mi_cv, baseline.model = model, min.mi = 10, k = 2)
 
 # Creating a fit object for each model:
 fits_mod_adj_mi_cv <- lapply(models_mod_adj_mi_cv, lavaan::cfa)
@@ -68,7 +65,7 @@ fits_mod_adj_mi_cv <- lapply(models_mod_adj_mi_cv, lavaan::cfa)
 ####################
 
 # Applying mod_adj_mi to each simulated dataset:
-models_mod_adj_chisq_cv <- lapply(sim_data, mod_adj_chisq_cv, baseline.model = model, min.mi = 10)
+models_mod_adj_chisq_cv <- lapply(sim_data, mod_adj_chisq_cv, baseline.model = model, min.mi = 4)
 
 # Creating a fit object for each model:
 fits_mod_adj_chisq_cv <- lapply(models_mod_adj_chisq_cv, lavaan::cfa)
