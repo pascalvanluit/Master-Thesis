@@ -6,6 +6,16 @@ library(shapes)
 library(purrrlyr)
 source("Simulation study/create_true_covmat.R")                
 
+# Findind the distcov of mod_adj_mi_4:
+
+                
+                
+
+# Trying the distance measure of covmats:
+distcov(covmats_mod_adj_mi_4, true_covmats)
+class(true_covmats)
+true_covmats[[1]]    
+
                 
 # Combining the MSE values of each of the methods:
 mses <- cbind(mse_mod_adj_mi_4, mse_mod_adj_mi_10, mse_mod_adj_mi_cv, mse_mod_adj_chisq_cv)
@@ -13,6 +23,8 @@ mses <- cbind(mse_mod_adj_mi_4, mse_mod_adj_mi_10, mse_mod_adj_mi_cv, mse_mod_ad
 # Finding the true covariance matrices for each condition:
 true_covmats <- purrrlyr::by_row(conditions, create_true_covmat, .collate = "list")
 true_covmats <- true_covmats %>% select(.out)
+
+
 
 # Combining all the covariance matrics (true and estimated by each method):
 all_covmats <- cbind(true_covmats, covmats_mod_adj_mi_4, covmats_mod_adj_mi_10, covmats_mod_adj_mi_cv, covmats_mod_adj_chisq_cv)
