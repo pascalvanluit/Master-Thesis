@@ -1,4 +1,4 @@
-modindices_train <- function(fit, model, data, k){
+modindices_train <- function(fit, model, data, k, ...){
 
 #######################################
 # Splitting the dataset into k groups #
@@ -14,7 +14,7 @@ modindices_train <- function(fit, model, data, k){
 #######################
   
   # Fitting the model on the full dataset to create a space where train MIs can be saved:
-  fit         <- lavaan::cfa(model, data, optim.force.converged = TRUE)
+  fit         <- lavaan::cfa(model, data, optim.force.converged = TRUE, ...)
   pvalue      <- lavaan::fitmeasures(fit, c("pvalue"))
   pvalue      <- 0
   
@@ -28,7 +28,7 @@ modindices_train <- function(fit, model, data, k){
     train <- data_split %>% filter(fold != i)
     
     # Creating train and test fits:
-    fit_train <- lavaan::cfa(model, train, optim.force.converged = TRUE)
+    fit_train <- lavaan::cfa(model, train, optim.force.converged = TRUE, ...)
     
     # Obtaining MI values:
     mi_train <- lavaan::modindices(fit_train, na.remove = FALSE)
@@ -58,7 +58,7 @@ modindices_train <- function(fit, model, data, k){
     test <- data_split %>% filter(fold == i)
     
     # fitting the model to the test set:
-    fit_test <- lavaan:::cfa(model, test, optim.force.converged = TRUE)
+    fit_test <- lavaan:::cfa(model, test, optim.force.converged = TRUE, ...)
     
     # Obtaining the pvalue (significance) of chi-square fit measure:
     pvalue_test <- lavaan::fitmeasures(fit_test, c("pvalue"))

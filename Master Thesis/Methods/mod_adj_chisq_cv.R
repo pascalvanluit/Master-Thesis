@@ -4,13 +4,14 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
   model <- baseline.model
   
   # Fit all the data:
-  fit <- lavaan::cfa(model, data)
+  fit <- lavaan::cfa(model, data, optim.force.converged = TRUE, ...)
 
   # Obtain MIs from training set and only accept if OOS fit is significant on average:
   MIs <- try(modindices_train(fit, model, data, k), silent = TRUE)
   if(inherits(MIs, "try-error"))
-    {
-    return(model)
+   {
+    out1 <- list(model = model, fit = fit)
+    return(out1)
   }
   
   # Arranging the MIs from largest to smallest:
@@ -32,13 +33,14 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
     model <- paste(model, mod, sep = "\n")
     
     # Fitting model to the data
-    fit <- lavaan::cfa(model, data, check.gradient = FALSE, optim.force.converged = TRUE, ...)
+    fit <- lavaan::cfa(model, data, optim.force.converged = TRUE, ...)
     
     # Obtaining MI values:
     MIs <- MIs <- try(modindices_train(fit, model, data, k), silent = TRUE)
     if(inherits(MIs, "try-error"))
      {
-      return(model)
+      out1 <- list(model = model, fit = fit)
+      return(out1)
     }
     
     # Arranging the MIs from largest to smallest:
@@ -51,7 +53,9 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
   
   # Print the final model:
   final.model <- tail(model, 1)
-  return(final.model)
+  out3 <- list(model = final.model, fit = fit)
+  
+  return(out3)
   
 }
   

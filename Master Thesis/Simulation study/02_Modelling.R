@@ -67,11 +67,13 @@ fits_mod_adj_mi_cv <- lapply(out_mod_adj_mi_cv, `[`, c('fit'))
 ####################
 
 # Applying mod_adj_mi to each simulated dataset:
-models_mod_adj_chisq_cv <- lapply(sim_data, mod_adj_chisq_cv, baseline.model = model, min.mi = 4)
+out_mod_adj_chisq_cv <- lapply(sim_data, mod_adj_chisq_cv, baseline.model = model, min.mi = 10)
 
-# Creating a fit object for each model:
-fits_mod_adj_chisq_cv <- lapply(models_mod_adj_chisq_cv, lavaan::cfa)
+# Obtaining all the models:
+models_mod_adj_chisq_cv <- lapply(out_mod_adj_chisq_cv, `[`, c('model'))
 
+# Obtaining a fit object from each model:
+fits_mod_adj_chisq_cv <- lapply(out_mod_adj_chisq_cv, `[`, c('fit'))
 
 
                   ##############################################
@@ -83,13 +85,23 @@ fits_mod_adj_chisq_cv <- lapply(models_mod_adj_chisq_cv, lavaan::cfa)
 ################
 
 # Obtaining the summary of each fit:
-sums_mod_adj_mi_4 <- lapply(fits_mod_adj_mi_4, summary)
+sums_mod_adj_mi_4 <- list()
+
+for (i in 1:length(fits_mod_adj_mi_4)) {
+  sums_mod_adj_mi_4[[i]] <- lavaan::summary(fits_mod_adj_mi_4[[i]]$fit)
+}
 
 # Obtaining the parameter of interest from each fit summary:
-pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4$PE$est, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
+pois_mod_adj_mi_4 <- list()
+
+for (i in 1:length(sums_mod_adj_mi_4)) {
+  pois_mod_adj_mi_4[[i]] <- subset(sums_mod_adj_mi_4[[i]]$PE$est, sums_mod_adj_mi_4[[i]]$PE$lhs == "f1" & sums_mod_adj_mi_4[[i]]$PE$rhs == "f2")
+}
+
+pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
-mse_mod_adj_mi_4 <- pois_mod_adj_mi_4 - conditions[, 2]
+mse_mod_adj_mi_4 <- c(mse_rho = (unlist(pois_mod_adj_mi_4) - conditions[, 2])^2)
 
 
 #################
@@ -141,7 +153,7 @@ mse_mod_adj_chisq_cv <- pois_mod_adj_chisq_cv - conditions[, 2]
 ################
 # mod_adj_mi_4 #
 ################
-covmats_mod_adj_mi_4 <- lapply(fits_mod_adj_mi_4, fitted)
+covmats_mod_adj_mi_4 <- lapply(unlist(fits_mod_adj_mi_4), fitted)
 
 
 ################
