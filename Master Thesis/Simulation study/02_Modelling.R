@@ -98,7 +98,7 @@ for (i in 1:length(sums_mod_adj_mi_4)) {
   pois_mod_adj_mi_4[[i]] <- subset(sums_mod_adj_mi_4[[i]]$PE$est, sums_mod_adj_mi_4[[i]]$PE$lhs == "f1" & sums_mod_adj_mi_4[[i]]$PE$rhs == "f2")
 }
 
-pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
+# pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
 
 # Finding the MSE of the PoI:
 mse_mod_adj_mi_4 <- c(mse_rho = (unlist(pois_mod_adj_mi_4) - conditions[, 2])^2)
