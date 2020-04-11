@@ -20,31 +20,3 @@ create_true_covmat <- function(conditions) {
   
   return(Sigma)
 }
-
-out <- purrrlyr::by_row(conditions, create_true_covmat, .collate = "list")
-out %>% 
-  select(.out)
-
-
-create_true_covmat(conditions[1,])
-
-apply(conditions, 2, create_true_covmat)
-
-
-
-
-
-
-pmap(conditions, create_true_covmat)
-
-
-rot.conditions <- t(apply(conditions, 2, rev))
-
-sapply(rot.conditions, create_true_covmat, simplify = FALSE)
-
-lapply(rot.conditions, create_true_covmat)
-
-apply(rot.conditions, 2, create_true_covmat)
-
-
-
