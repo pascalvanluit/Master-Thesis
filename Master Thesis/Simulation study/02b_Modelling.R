@@ -17,7 +17,7 @@ pois_mod_adj_mi <- lapply(unlist(unlist(fits)), parameterestimates)
 
 lapply(fits_mod_adj_mi_4, function(x) summary(x$fit))
 parameterestimates(models_and_fits[[,2]])
-## Parameterestimates function ##
+
 ## lavInspect
 
 # Obtaining the summary of each fit:
