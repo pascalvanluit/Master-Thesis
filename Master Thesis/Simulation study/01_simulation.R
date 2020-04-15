@@ -68,11 +68,19 @@ GenerateData <- function(conditions){
 # Applying the function for each condition #
 ############################################
 # sim_data <- apply(conditions, 1, FUN = GenerateData)
-replications <- 2
-out <- replicate(replications, apply(conditions, 1, GenerateData))
+replications <- 5
+# out <- replicate(replications, apply(conditions, 1, GenerateData))
+
+conditions$datasets <- vector("list", nrow(conditions))
+
+for (i in 1:nrow(conditions)) {
+  datalist <- lapply(1:replications, function(x) GenerateData(conditions = conditions[i,]))
+  #write_rds(datalist, path = paste0("Simulation study/simdat/", i, ".rds"))
+  conditions$datasets[i] <- list(datalist)
+}
 
 #####################################
 # Exporting the simulated data sets #
 #####################################
-write_rds(out, path = "Simulation study/01_sim_data.rds")
+write_rds(conditions, path = "Simulation study/01_sim_data.rds")
 

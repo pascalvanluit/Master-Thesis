@@ -20,13 +20,28 @@ source("Methods/mod_adj_chisq_cv.R")
                  # Creating lavaan fits and models # 
                  ###################################
 
-# Creating a tibble to save ALL models and fits in:
-# out_df <- tibble(.rows = length(sim_data))
-
-
 ################
 # mod_adj_mi_4 #
 ################
+
+conditions$outputs <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  for (j in 1:replications) {
+    
+    outputlist <- lapply(conditions$datasets[[i]][[j]], mod_adj_mi, baseline.model = model, min.mi = 4)
+    conditions$outputs[[i]] <- list(outputlist)
+    
+  }
+  
+  
+  # #lapply(dat[i], mod_adj_mi, baseline.model = model)
+  # outputlist <- lapply(1:replications, function(x) mod_adj_mi(model, data = conditions$datasets, optim.force.converged = TRUE))
+  # 
+  # conditions$outputs[i] <- list(outputlist)
+  
+}
 
 # Tibble to save mod_adj_mi_4 models and fits in:
 tib_mod_adj_mi_4 <- tibble(.rows = nrow(out))
