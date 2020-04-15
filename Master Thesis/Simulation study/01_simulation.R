@@ -11,10 +11,10 @@ conditions <- read_rds(path = "Simulation study/00_conditions.rds")
 
 GenerateData <- function(conditions){
   
-  lambda <- conditions[1]
-  rho    <- conditions[2]
-  delta  <- conditions[3]
-  n      <- conditions[4]
+  lambda <- as.numeric(conditions[1])
+  rho    <- as.numeric(conditions[2])
+  delta  <- as.numeric(conditions[3])
+  n      <- as.numeric(conditions[4])
 
 ########################################
 # Specifying LY: Factor loading matrix # 
@@ -67,10 +67,12 @@ GenerateData <- function(conditions){
 ############################################
 # Applying the function for each condition #
 ############################################
-sim_data <- apply(conditions, 1, FUN = GenerateData)
+# sim_data <- apply(conditions, 1, FUN = GenerateData)
+replications <- 2
+out <- replicate(replications, apply(conditions, 1, GenerateData))
 
 #####################################
 # Exporting the simulated data sets #
 #####################################
-write_rds(sim_data, path = "Simulation study/01_sim_data.rds")
+write_rds(out, path = "Simulation study/01_sim_data.rds")
 

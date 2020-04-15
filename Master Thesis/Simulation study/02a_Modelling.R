@@ -21,22 +21,34 @@ source("Methods/mod_adj_chisq_cv.R")
                  ###################################
 
 # Creating a tibble to save ALL models and fits in:
-out_df <- tibble(.rows = length(sim_data))
+# out_df <- tibble(.rows = length(sim_data))
 
 
 ################
 # mod_adj_mi_4 #
 ################
 
+# Tibble to save mod_adj_mi_4 models and fits in:
+tib_mod_adj_mi_4 <- tibble(.rows = nrow(out))
+
 # Applying function to each dataset:
-out_mod_adj_mi_4 <- lapply(sim_data, mod_adj_mi, baseline.model = model, min.mi = 4)
+out_mod_adj_mi_4 <- lapply(out, mod_adj_mi, baseline.model = model, min.mi = 4,
+                           optim.force.converged = TRUE)
+out_mod_adj_mi_4 <- matrix(out_mod_adj_mi_4, ncol = replications)
 
 # Obtaining all the models:
 models_mod_adj_mi_4 <- lapply(out_mod_adj_mi_4, `[`, c('model'))
+models_mod_adj_mi_4 <- matrix(models_mod_adj_mi_4, ncol = replications)
 
 # Obtaining a fit object from each model:
 fits_mod_adj_mi_4 <- lapply(out_mod_adj_mi_4, `[`, c('fit'))
+fits_mod_adj_mi_4 <- matrix(fits_mod_adj_mi_4, ncol = replications)
 
+tib_mod_adj_mi_4 <- tib_mod_adj_mi_4 %>% 
+  mutate(models_mod_adj_mi_4 = models_mod_adj_mi_4,
+         fits_mod_adj_mi_4 = fits_mod_adj_mi_4)
+
+write_rds(tib_mod_adj_mi_4, path = "Simulation study/02_tib_mod_adj_mi_4.rds")
 
 
 #################

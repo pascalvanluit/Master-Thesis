@@ -1,3 +1,4 @@
+source("Simulation study/poi.R")
 models_and_fits <- read_rds(path = "Simulation study/02_models_and_fits.rds")
 
 models <- models_and_fits %>% 
@@ -13,31 +14,29 @@ fits <- models_and_fits %>%
 ################
 # mod_adj_mi_4 #
 ################
-pois_mod_adj_mi <- lapply(unlist(unlist(fits)), parameterestimates)
 
-lapply(fits_mod_adj_mi_4, function(x) summary(x$fit))
-parameterestimates(models_and_fits[[,2]])
+# Sourcing the tibble with all the models and fits of mod_adj_mi_4:
+tib_mod_adj_mi_4 <- source("Simulation study/02_tib_mod_adj_mi_4.rds")
 
-## lavInspect
+# Separating the models:
+models_mod_adj_mi_4 <- tib_mod_adj_mi_4 %>% 
+  select(contains("models"))
 
-# Obtaining the summary of each fit:
-sums_mod_adj_mi_4 <- vector("list", length(fits_mod_adj_mi_4))
+# Separating the fits:
+fits_mod_adj_mi_4 <- tib_mod_adj_mi_4 %>% 
+  select(contains("fits"))
 
-for (i in 1:length(fits_mod_adj_mi_4)) {
-  sums_mod_adj_mi_4[[i]] <- lavaan::summary(fits_mod_adj_mi_4[[i]]$fit)
-}
+# Finding the value of the parameter of interest:
+fits_mod_adj_mi_4 <- unlist(fits_mod_adj_mi_4)
+pois_mod_adj_mi_4 <- lapply(fits_mod_adj_mi_4, parameterestimates)
+pois_mod_adj_mi_4 <- lapply(unname(pois_mod_adj_mi_4), poi)
 
-# Obtaining the parameter of interest from each fit summary:
-pois_mod_adj_mi_4 <- list()
+# Computing the MSE of the parameter of interest:
+mse_mod_adj_mi_4 <- as.data.frame(c((unlist(pois_mod_adj_mi_4) - conditions[, 2])^2))
 
-for (i in 1:length(sums_mod_adj_mi_4)) {
-  pois_mod_adj_mi_4[[i]] <- subset(sums_mod_adj_mi_4[[i]]$PE$est, sums_mod_adj_mi_4[[i]]$PE$lhs == "f1" & sums_mod_adj_mi_4[[i]]$PE$rhs == "f2")
-}
 
-# pois_mod_adj_mi_4 <- subset(sums_mod_adj_mi_4, sums_mod_adj_mi_4$PE$lhs == "f1" & sums_mod_adj_mi_4$PE$rhs == "f2")
 
-# Finding the MSE of the PoI:
-mse_mod_adj_mi_4 <- c(mse_rho = (unlist(pois_mod_adj_mi_4) - conditions[, 2])^2)
+
 
 
 # #################
