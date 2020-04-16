@@ -9,9 +9,9 @@ mod_adj_mi_model <- function(baseline.model, data, min.mi = 10, ...){
   # Obtaing MI values:
   MIs <- try(lavaan::modindices(fit), silent = TRUE)
   if (inherits(MIs, "try-error"))
-    {
+  {
     out1 <- list(model = model, fit = fit)
-    return(model)
+    return(fit)
   }
   
   # Arranging the MIs from largest to smallest:
@@ -39,7 +39,7 @@ mod_adj_mi_model <- function(baseline.model, data, min.mi = 10, ...){
     MIs <- try(lavaan::modindices(fit), silent = TRUE)
     if (inherits(MIs, "try-error")){
       out2 <- list(model = model, fit = fit)
-      return(model)
+      return(fit)
     }
     
     # Arranging the MIs from largest to smallest:
@@ -55,7 +55,7 @@ mod_adj_mi_model <- function(baseline.model, data, min.mi = 10, ...){
   
   out3 <- list(model = final.model, fit = fit)
   
-  return(final.model)
+  return(fit)
   #return(final.model)
   
   

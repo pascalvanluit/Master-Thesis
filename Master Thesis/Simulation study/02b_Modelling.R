@@ -15,6 +15,21 @@ fits <- models_and_fits %>%
 # mod_adj_mi_4 #
 ################
 
+conditions$models <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  for (j in 1:replications) {
+    
+    modellist <- conditions$outputs[[i]][[j]]$model
+    conditions$models[j] <- list(modellist)
+  }
+  
+}
+
+
+
+
 # Sourcing the tibble with all the models and fits of mod_adj_mi_4:
 tib_mod_adj_mi_4 <- source("Simulation study/02_tib_mod_adj_mi_4.rds")
 

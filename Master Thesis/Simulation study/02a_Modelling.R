@@ -32,10 +32,9 @@ for (i in nrow(conditions)) {
     
     outputlist <- lapply(conditions$datasets[[i]], mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
     # mod_adj_mi(baseline.model = model, data = conditions$datasets[[i]][[j]], min.mi = 4, optim.force.converged = TRUE)
-    conditions$outputs[[j]] <- list(outputlist)
+    conditions$outputs[j] <- list(outputlist)
     
   }
-  
 
   # #lapply(dat[i], mod_adj_mi, baseline.model = model)
   # outputlist <- lapply(1:replications, function(x) mod_adj_mi(model, data = conditions$datasets, optim.force.converged = TRUE))
@@ -43,6 +42,10 @@ for (i in nrow(conditions)) {
   # conditions$outputs[i] <- list(outputlist)
   
 }
+
+write_rds(conditions, path = "Simulation study/02_outputs.rds")
+
+
 
 # Tibble to save mod_adj_mi_4 models and fits in:
 tib_mod_adj_mi_4 <- tibble(.rows = nrow(out))
