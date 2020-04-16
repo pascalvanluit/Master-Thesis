@@ -1,6 +1,5 @@
 set.seed(88)
 library(simsem)
-library(tidyverse)
 
 # Import the conditions grid:
 conditions <- read_rds(path = "Simulation study/00_conditions.rds")
@@ -68,9 +67,9 @@ GenerateData <- function(conditions){
 # Applying the function for each condition #
 ############################################
 # sim_data <- apply(conditions, 1, FUN = GenerateData)
-replications <- 5
 # out <- replicate(replications, apply(conditions, 1, GenerateData))
 
+# Creating a column to store the simulated datasets in:
 conditions$datasets <- vector("list", nrow(conditions))
 
 for (i in 1:nrow(conditions)) {
