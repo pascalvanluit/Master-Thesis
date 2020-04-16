@@ -30,12 +30,12 @@ for (i in nrow(conditions)) {
   
   for (j in 1:replications) {
     
-    outputlist <- lapply(conditions$datasets[[i]], mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
+    outputlist[i] <- lapply(conditions$datasets[[i]], mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
     # mod_adj_mi(baseline.model = model, data = conditions$datasets[[i]][[j]], min.mi = 4, optim.force.converged = TRUE)
-    conditions$outputs[j] <- list(outputlist)
+    
     
   }
-
+  conditions$outputs[[i]] <- list(outputlist[i])
   # #lapply(dat[i], mod_adj_mi, baseline.model = model)
   # outputlist <- lapply(1:replications, function(x) mod_adj_mi(model, data = conditions$datasets, optim.force.converged = TRUE))
   # 

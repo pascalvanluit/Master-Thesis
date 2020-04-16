@@ -15,18 +15,73 @@ fits <- models_and_fits %>%
 # mod_adj_mi_4 #
 ################
 
+# Getting all models of mod_adj_mi_4
 conditions$models <- vector("list", nrow(conditions))
 
 for (i in nrow(conditions)) {
   
   for (j in 1:replications) {
     
-    modellist <- conditions$outputs[[i]][[j]]$model
+    modellist <- lapply(conditions$outputs[[i]], function(x) list.extract(x, 'model'))
     conditions$models[j] <- list(modellist)
   }
   
 }
 
+# Getting all fits of mod_adj_mi_4
+conditions$fits <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  for (j in 1:replications) {
+    
+    fitlist <- lapply(conditions$outputs[[i]], function(x) list.extract(x, 'fit'))
+    conditions$fits[j] <- list(fitlist)
+  }
+  
+}
+
+# Getting all poi values of mod_adj_mi_4
+conditions$poi <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  for (j in 1:replications) {
+    
+    poilist <- lapply(conditions$fits[[i]], poi)
+    
+    conditions$poi[j] <- list(poilist)
+  }
+  
+}
+ 
+# Getting the mse value for each estimate of poi:
+conditions$mses <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  for (j in 1:replications) {
+    
+    mseslist <- lapply(conditions$poi[[i]], function(x) ((unlist(x) - conditions[i, 2])^2))
+    
+    conditions$mses[j] <- list(mseslist)
+  }
+  
+}
+
+# Getting the mean mse of each condition:
+conditions$mean_mse <- vector("list", nrow(conditions))
+
+for (i in nrow(conditions)) {
+  
+  # for (j in 1:replications) {
+    
+    mean_mse <- lapply(conditions$mses[i], function(x) mean(unlist(x)))
+    
+    conditions$mean_mse[i] <- mean_mse
+  # }
+  
+}
 
 
 
