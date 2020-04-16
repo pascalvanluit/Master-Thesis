@@ -1,4 +1,4 @@
-mod_adj_mi <- function(baseline.model, data, min.mi = 10, ...){
+mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
   
   # Saving baseline model as model:
   model <- baseline.model
@@ -33,13 +33,18 @@ mod_adj_mi <- function(baseline.model, data, min.mi = 10, ...){
     model <- paste(model, mod, sep = "\n")
     
     # Fitting model to the data
-    fit <- lavaan::cfa(model, data, ...)
+    fit <- try(lavaan::cfa(model, data, ...), silent = TRUE)
+    if (inherits(fit, "try-error"))
+      {
+      out2 <- list(model = model, fit = fit)
+      return(out2)
+    }
     
     # Obtaining MI values:
     MIs <- try(lavaan::modindices(fit), silent = TRUE)
     if (inherits(MIs, "try-error")){
-      out2 <- list(model = model, fit = fit)
-      return(out2)
+      out3 <- list(model = model, fit = fit)
+      return(out3)
     }
     
     # Arranging the MIs from largest to smallest:
@@ -53,9 +58,9 @@ mod_adj_mi <- function(baseline.model, data, min.mi = 10, ...){
   # Print the final model:
   final.model <- tail(model, 1)
   
-  out3 <- list(model = final.model, fit = fit)
+  out4 <- list(model = final.model, fit = fit)
   
-  return(out3)
+  return(out4)
   #return(final.model)
   
   

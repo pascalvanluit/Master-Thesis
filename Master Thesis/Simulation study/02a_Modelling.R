@@ -26,22 +26,42 @@ source("Methods/mod_adj_chisq_cv.R")
 
 conditions$outputs <- vector("list", nrow(conditions))
 
+# Using a nested apply to obtain outputs:
+conditions$outputs <- lapply(conditions$datasets, lapply, mod_adj_mi, baseline.model = model, optim.force.converged = TRUE)
+
+
+
+
+
+
+
+outputlist <- vector("list", nrow(conditions))
 for (i in nrow(conditions)) {
   
-  for (j in 1:replications) {
+  #for (j in 1:replications) {
     
-    outputlist[i] <- lapply(conditions$datasets[[i]], mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
+    outputlist[[i]] <- lapply(1:replications, function(replications) mod_adj_mi(model, data = conditions$datasets[[i]][[replications]], min.mi = 4, optim.force.converged = TRUE))
+    
+    # outputlist[[j]] <- mod_adj_mi(baseline.model = model, data = conditions$datasets[[1]][[j]], min.mi = 4, optim.force.converged = TRUE)
+    
+    # outputlist <- lapply(conditions$datasets[[i]], mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
     # mod_adj_mi(baseline.model = model, data = conditions$datasets[[i]][[j]], min.mi = 4, optim.force.converged = TRUE)
     
     
-  }
-  conditions$outputs[[i]] <- list(outputlist[i])
+    
+  #}
+  conditions$outputs[i] <- outputlist[[i]]
+  
   # #lapply(dat[i], mod_adj_mi, baseline.model = model)
   # outputlist <- lapply(1:replications, function(x) mod_adj_mi(model, data = conditions$datasets, optim.force.converged = TRUE))
   # 
   # conditions$outputs[i] <- list(outputlist)
   
 }
+
+
+
+
 
 write_rds(conditions, path = "Simulation study/02_outputs.rds")
 

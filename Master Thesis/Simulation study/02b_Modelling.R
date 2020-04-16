@@ -15,6 +15,17 @@ fits <- models_and_fits %>%
 # mod_adj_mi_4 #
 ################
 
+# Using a nested apply to obtain models:
+conditions$models <- lapply(conditions$outputs, lapply, function(x) list.extract(x, 'model'))
+
+# Using a nested apply to obtain fits:
+conditions$fits <- lapply(conditions$outputs, lapply, function(x) list.extract(x, 'fit'))
+
+# Using a nested apply to obtain poi estimates:
+conditions$fits <- lapply(conditions$outputs, lapply, function(x) list.extract(x, 'fit'))
+
+
+
 # Getting all models of mod_adj_mi_4
 conditions$models <- vector("list", nrow(conditions))
 
