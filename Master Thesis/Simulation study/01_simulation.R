@@ -66,12 +66,9 @@ GenerateData <- function(conditions){
 ############################################
 # Applying the function for each condition #
 ############################################
-# sim_data <- apply(conditions, 1, FUN = GenerateData)
-# out <- replicate(replications, apply(conditions, 1, GenerateData))
 
 # Creating a column to store the simulated datasets in:
 conditions$datasets <- vector("list", nrow(conditions))
-
 for (i in 1:nrow(conditions)) {
   datalist <- lapply(1:replications, function(x) GenerateData(conditions = conditions[i,]))
   #write_rds(datalist, path = paste0("Simulation study/simdat/", i, ".rds"))

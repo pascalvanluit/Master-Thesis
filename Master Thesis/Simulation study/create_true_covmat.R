@@ -18,5 +18,7 @@ create_true_covmat <- function(conditions) {
   # Computing the variance-covariance matrix:
   Sigma <- Lambda %*% Psi %*% t(Lambda) + Theta
   
+  Sigma <- as.matrix(Sigma)
+  
   return(Sigma)
 }

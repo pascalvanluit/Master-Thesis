@@ -1,7 +1,8 @@
 source("Simulation study/poi.R")
-
+source("Simulation study/create_true_covmat.R")
 library(gmodels)
 library(shapes)
+library(purrrlyr)
             ########################################################
             # Obtaining the estimates of the Parameter of Interest # 
             ########################################################
@@ -10,53 +11,49 @@ library(shapes)
 # mod_adj_mi_4 #
 ################
 
-# Using a nested apply to obtain models:
+# Using a nested lapply to obtain models:
 conditions$models <- lapply(conditions$outputs, lapply, function(x) list.extract(x, 'model'))
 
-# Using a nested apply to obtain fits:
+# Using a nested lapply to obtain fits:
 conditions$fits <- lapply(conditions$outputs, lapply, function(x) list.extract(x, 'fit'))
 
 
-# Using a nested apply to obtain poi estimates:
+# Using a nested lapply to obtain poi estimates:
 conditions$pois <- lapply(conditions$pois, lapply, function(x) poi(x))
 
-# Using a nested apply to obtain mse of poi estimates:
+# Using a nested lapply to obtain mse of poi estimates:
 conditions$mses <- lapply(conditions$mses, lapply, function(x) (as.matrix(x) - conditions[,2]))
 
-# Using a nested apply to obtain mean mse and CI's for each condition:
+# Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions$mean_mse <- lapply(conditions$mses, function(x) mean(unlist(x)))
 conditions$mse_ci_lower <- lapply(conditions$mses, function(x) ci(unlist(x))["CI lower"])
 conditions$mse_ci_upper <- lapply(conditions$mses, function(x) ci(unlist(x))["CI upper"])
 
 
-# Using nested apply to obtain estimated covariance matrices:
+# Using nested lapply to obtain estimated covariance matrices:
 conditions$covmats <- lapply(conditions$fits, lapply, fitted)
 
-# Using nested lapply to obtain distcov from true covmat:
-conditions$truecov <- purrrlyr::by_row(conditions, create_true_covmat)
+# Obtaining the true covmat for each condition:
+conditions <- purrrlyr::by_row(conditions, create_true_covmat)
+
+# Computing the covmat distance:
+conditions$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions$covmats[[i]], function(x) distcov(x$cov, conditionstest$.out[[i]]))
+  conditions$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions$mean_distcov <- lapply(conditions$distcov, function(x) mean(unlist(x)))
+conditions$distcov_ci_lower <- lapply(conditions$distcov, function(x) ci(unlist(x))["CI lower"])
+conditions$distcov_ci_upper <- lapply(conditions$distcov, function(x) ci(unlist(x))["CI upper"])
 
 
 
 
 
-# Sourcing the tibble with all the models and fits of mod_adj_mi_4:
-tib_mod_adj_mi_4 <- source("Simulation study/02_tib_mod_adj_mi_4.rds")
 
-# Separating the models:
-models_mod_adj_mi_4 <- tib_mod_adj_mi_4 %>% 
-  select(contains("models"))
 
-# Separating the fits:
-fits_mod_adj_mi_4 <- tib_mod_adj_mi_4 %>% 
-  select(contains("fits"))
-
-# Finding the value of the parameter of interest:
-fits_mod_adj_mi_4 <- unlist(fits_mod_adj_mi_4)
-pois_mod_adj_mi_4 <- lapply(fits_mod_adj_mi_4, parameterestimates)
-pois_mod_adj_mi_4 <- lapply(unname(pois_mod_adj_mi_4), poi)
-
-# Computing the MSE of the parameter of interest:
-mse_mod_adj_mi_4 <- as.data.frame(c((unlist(pois_mod_adj_mi_4) - conditions[, 2])^2))
 
 
 
