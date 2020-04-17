@@ -36,6 +36,7 @@ mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
     fit <- try(lavaan::cfa(model, data, ...), silent = TRUE)
     if (inherits(fit, "try-error"))
       {
+      ifelse(is.atomic(fit) == TRUE, fit <- list(NA), fit)
       out2 <- list(model = model, fit = fit)
       return(out2)
     }
@@ -62,6 +63,5 @@ mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
   
   return(out4)
   #return(final.model)
-  
   
 }
