@@ -27,9 +27,9 @@ conditions_mod_adj_mi_4$pois <- lapply(conditions_mod_adj_mi_4$fits, lapply, fun
 conditions_mod_adj_mi_4$mses <- lapply(conditions_mod_adj_mi_4$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
-conditions_mod_adj_mi_4$mean_mse <- lapply(conditions_mod_adj_mi_4$mses, function(x) mean(unlist(x)))
-conditions_mod_adj_mi_4$mse_ci_lower <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x))["CI lower"])
-conditions_mod_adj_mi_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x))["CI upper"])
+conditions_mod_adj_mi_4$mean_mse <- lapply(conditions_mod_adj_mi_4$mses, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_4$mse_ci_lower <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
 # # Using nested lapply to obtain estimated covariance matrices:
@@ -73,9 +73,9 @@ conditions_mod_adj_mi_10$pois <- lapply(conditions_mod_adj_mi_10$fits, lapply, f
 conditions_mod_adj_mi_10$mses <- lapply(conditions_mod_adj_mi_10$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
-conditions_mod_adj_mi_10$mean_mse <- lapply(conditions_mod_adj_mi_10$mses, function(x) mean(unlist(x)))
-conditions_mod_adj_mi_10$mse_ci_lower <- lapply(conditions_mod_adj_mi_10$mses, function(x) ci(unlist(x))["CI lower"])
-conditions_mod_adj_mi_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_10$mses, function(x) ci(unlist(x))["CI upper"])
+conditions_mod_adj_mi_10$mean_mse <- lapply(conditions_mod_adj_mi_10$mses, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_10$mse_ci_lower <- lapply(conditions_mod_adj_mi_10$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_10$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
 ###################
