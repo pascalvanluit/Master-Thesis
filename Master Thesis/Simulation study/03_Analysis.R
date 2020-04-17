@@ -6,17 +6,18 @@ library(shapes)
 library(purrrlyr)
 source("Simulation study/create_true_covmat.R")                
 
-# Obtaining the true covariance matrices:
-true_covmats <- purrrlyr::by_row(conditions, create_true_covmat, .collate = "list")
-true_covmats <- true_covmats %>% select(.out)
-true_covmats <- true_covmats[[1]]
-
                 
-# Finding the distcov of mod_adj_mi_4:
-distcov_mod_adj_mi_4 <- list()
-for (i in 1:length(true_covmats)) {
-  distcov_mod_adj_mi_4[i] <- distcov(true_covmats[[i]], covmats_mod_adj_mi_4[i]$fit$cov)
-}
+                
+                
+                
+                
+                
+                
+                
+# # Obtaining the true covariance matrices:
+# true_covmats <- purrrlyr::by_row(conditions, create_true_covmat, .collate = "list")
+# true_covmats <- true_covmats %>% select(.out)
+# true_covmats <- true_covmats[[1]]
                 
 
                 

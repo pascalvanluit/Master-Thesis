@@ -19,7 +19,7 @@ conditions$fits <- lapply(conditions$outputs, lapply, function(x) list.extract(x
 
 
 # Using a nested lapply to obtain poi estimates:
-conditions$pois <- lapply(conditions$pois, lapply, function(x) poi(x))
+conditions$pois <- lapply(conditions$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
 conditions$mses <- lapply(conditions$mses, lapply, function(x) (as.matrix(x) - conditions[,2]))
