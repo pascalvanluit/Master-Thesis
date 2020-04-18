@@ -39,7 +39,7 @@ conditions_mod_adj_mi_4$outputs <- vector("list", nrow(conditions))
 # Using a nested apply to obtain outputs:
 conditions_mod_adj_mi_4$outputs <- lapply(conditions$datasets, lapply, mod_adj_mi, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
 
-write_rds(conditions_mod_adj_mi_4, path = "Simulation study/02_conditions_mod_adj_mi_4.rds")
+write_rds(conditions_mod_adj_mi_4, path = "Simulation study/Outputs/02_conditions_mod_adj_mi_4.rds")
 
 
 #################
@@ -51,24 +51,55 @@ conditions_mod_adj_mi_10$outputs <- vector("list", nrow(conditions))
 # Using a nested apply to obtain outputs:
 conditions_mod_adj_mi_10$outputs <- lapply(conditions$datasets, lapply, mod_adj_mi, baseline.model = model, min.mi = 10, optim.force.converged = TRUE)
 
-write_rds(conditions_mod_adj_mi_4, path = "Simulation study/02_conditions_mod_adj_mi_4.rds")
+write_rds(conditions_mod_adj_mi_10, path = "Simulation study/Outputs/02_conditions_mod_adj_mi_10.rds")
+
+
+###################
+# mod_adj_mi_cv_4 #
+###################
+
+conditions_mod_adj_mi_cv_4$outputs <- vector("list", nrow(conditions))
+
+# Using a nested apply to obtain outputs:
+conditions_mod_adj_mi_cv_4$outputs <- lapply(conditions$datasets, lapply, mod_adj_mi_cv, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
+
+write_rds(conditions_mod_adj_mi_cv_4, path = "Simulation study/Outputs/02_conditions_mod_adj_mi_cv_4.rds")
+
+
+####################
+# mod_adj_mi_cv_10 #
+####################
+
+conditions_mod_adj_mi_cv_10$outputs <- vector("list", nrow(conditions))
+
+# Using a nested apply to obtain outputs:
+conditions_mod_adj_mi_cv_10$outputs <- lapply(conditions$datasets, lapply, mod_adj_mi_cv, baseline.model = model, min.mi = 10, optim.force.converged = TRUE)
+
+write_rds(conditions_mod_adj_mi_cv_10, path = "Simulation study/Outputs/02_conditions_mod_adj_mi_cv_10.rds")
 
 
 
+######################
+# mod_adj_chisq_cv_4 #
+######################
 
-# #################
-# # mod_adj_mi_cv #
-# #################
+conditions_mod_adj_chisq_cv_4$outputs <- vector("list", nrow(conditions))
 
+# Using a nested apply to obtain outputs:
+conditions_mod_adj_chisq_cv_4$outputs <- lapply(conditions$datasets, lapply, mod_adj_chisq_cv, baseline.model = model, min.mi = 4, optim.force.converged = TRUE)
 
-
-
-# ####################
-# # mod_adj_chisq_cv #
-# ####################
-
+write_rds(conditions_mod_adj_chisq_cv_4, path = "Simulation study/Outputs/02_conditions_mod_adj_chisq_cv_4.rds")
 
 
-                 
+#######################
+# mod_adj_chisq_cv_10 #
+#######################
+  
+conditions_mod_adj_chisq_cv_10$outputs <- vector("list", nrow(conditions))
+
+# Using a nested apply to obtain outputs:
+conditions_mod_adj_chisq_cv_10$outputs <- lapply(conditions$datasets, lapply, mod_adj_chisq_cv, baseline.model = model, min.mi = 10, optim.force.converged = TRUE)
+
+write_rds(conditions_mod_adj_chisq_cv_10, path = "Simulation study/Outputs/02_conditions_mod_adj_chisq_cv_10.rds")               
 
 
