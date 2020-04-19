@@ -24,7 +24,7 @@ conditions_mod_adj_mi_4$fits <- lapply(conditions_mod_adj_mi_4$outputs, lapply, 
 conditions_mod_adj_mi_4$pois <- lapply(conditions_mod_adj_mi_4$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_mi_4$mses <- lapply(conditions_mod_adj_mi_4$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_mi_4$mses <- lapply(conditions_mod_adj_mi_4$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_mi_4$mean_mse <- lapply(conditions_mod_adj_mi_4$mses, function(x) mean(unlist(x), na.rm = TRUE))
@@ -72,7 +72,7 @@ conditions_mod_adj_mi_10$fits <- lapply(conditions_mod_adj_mi_10$outputs, lapply
 conditions_mod_adj_mi_10$pois <- lapply(conditions_mod_adj_mi_10$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_mi_10$mses <- lapply(conditions_mod_adj_mi_10$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_mi_10$mses <- lapply(conditions_mod_adj_mi_10$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_mi_10$mean_mse <- lapply(conditions_mod_adj_mi_10$mses, function(x) mean(unlist(x), na.rm = TRUE))
@@ -101,7 +101,7 @@ conditions_mod_adj_mi_cv_4$fits <- lapply(conditions_mod_adj_mi_cv_4$outputs, la
 conditions_mod_adj_mi_cv_4$pois <- lapply(conditions_mod_adj_mi_cv_4$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_mi_cv_4$mses <- lapply(conditions_mod_adj_mi_cv_4$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_mi_cv_4$mses <- lapply(conditions_mod_adj_mi_cv_4$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_mi_cv_4$mean_mse <- lapply(conditions_mod_adj_mi_cv_4$mses, function(x) mean(unlist(x), na.rm = TRUE))
@@ -131,7 +131,7 @@ conditions_mod_adj_mi_cv_10$fits <- lapply(conditions_mod_adj_mi_cv_10$outputs, 
 conditions_mod_adj_mi_cv_10$pois <- lapply(conditions_mod_adj_mi_cv_10$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_mi_cv_10$mses <- lapply(conditions_mod_adj_mi_cv_10$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_mi_cv_10$mses <- lapply(conditions_mod_adj_mi_cv_10$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_mi_cv_10$mean_mse <- lapply(conditions_mod_adj_mi_cv_10$mses, function(x) mean(unlist(x), na.rm = TRUE))
@@ -161,7 +161,7 @@ conditions_mod_adj_chisq_cv_4$fits <- lapply(conditions_mod_adj_chisq_cv_4$outpu
 conditions_mod_adj_chisq_cv_4$pois <- lapply(conditions_mod_adj_chisq_cv_4$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_chisq_cv_4$mses <- lapply(conditions_mod_adj_chisq_cv_4$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_chisq_cv_4$mses <- lapply(conditions_mod_adj_chisq_cv_4$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_chisq_cv_4$mean_mse <- lapply(conditions_mod_adj_chisq_cv_4$mses, function(x) mean(unlist(x), na.rm = TRUE))
@@ -189,7 +189,7 @@ conditions_mod_adj_chisq_cv_10$fits <- lapply(conditions_mod_adj_chisq_cv_10$out
 conditions_mod_adj_chisq_cv_10$pois <- lapply(conditions_mod_adj_chisq_cv_10$fits, lapply, function(x) poi(x))
 
 # Using a nested lapply to obtain mse of poi estimates:
-conditions_mod_adj_chisq_cv_10$mses <- lapply(conditions_mod_adj_chisq_cv_10$pois, lapply, function(x) (as.matrix(x) - conditions[,2]))
+conditions_mod_adj_chisq_cv_10$mses <- lapply(conditions_mod_adj_chisq_cv_10$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
 
 # Using a nested lapply to obtain mean mse and CI's for each condition:
 conditions_mod_adj_chisq_cv_10$mean_mse <- lapply(conditions_mod_adj_chisq_cv_10$mses, function(x) mean(unlist(x), na.rm = TRUE))
