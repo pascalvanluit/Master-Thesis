@@ -1,3 +1,4 @@
+source("Methods/modindices_train.R")
 mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .05, ...){
   
   # Specifying the model:
@@ -58,10 +59,3 @@ mod_adj_chisq_cv <- function(baseline.model, data, k = 5, min.mi = 10, alpha = .
   return(out3)
   
 }
-  
-  
-  
-  
-
-
-

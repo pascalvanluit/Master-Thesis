@@ -22,15 +22,3 @@ results_mod_adj_chisq_cv_10 <- read_rds("Simulation study/Results/02_results_mod
                 
 
                 
-# # Combining the MSE values of each of the methods:
-# mses <- cbind(mse_mod_adj_mi_4, mse_mod_adj_mi_10, mse_mod_adj_mi_cv, mse_mod_adj_chisq_cv)
-# 
-# 
-# 
-# 
-# 
-# # Combining all the covariance matrics (true and estimated by each method):
-# all_covmats <- cbind(true_covmats, covmats_mod_adj_mi_4, covmats_mod_adj_mi_10, covmats_mod_adj_mi_cv, covmats_mod_adj_chisq_cv)
-# 
-# # Finding the distance of true and estimated covariance matrices:
-# dist_covmats <- matrix(dist_mod_adj_mi_4 = distcov(true_covmats, covmats_mod_adj_mi_4), dist_mod_adj_mi_10 = distcov(true_covmats, covmats_mod_adj_mi_10), dist_mod_adj_mi_cv = distcov(true_covmats, covmats_mod_adj_mi_cv), dist_mod_adj_chisq_cv = distcov(true_covmats, covmats_mod_adj_chisq_cv))

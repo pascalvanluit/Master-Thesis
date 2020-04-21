@@ -32,6 +32,11 @@ conditions_mod_adj_mi_4$mse_ci_lower <- lapply(conditions_mod_adj_mi_4$mses, fun
 conditions_mod_adj_mi_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
+# Finding the estimated covmats:
+conditions_mod_adj_mi_4$covmats <- lapply(conditions_mod_adj_mi_4$fits, lapply, fitted)
+conditions_test <- conditions_mod_adj_mi_4
+conditions_test <- purrrlyr::by_row(conditions_test, create_true_covmat)
+
 # # Using nested lapply to obtain estimated covariance matrices:
 # conditions$covmats <- lapply(conditions$fits, lapply, fitted)
 # 
@@ -52,7 +57,7 @@ conditions_mod_adj_mi_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_4$mses, fun
 
 
 # Obtaining the relevant results:
-results_mod_adj_mi_4 <- conditions_mod_adj_mi_4 %>% select(mean_mse, mse_ci_lower, mse_ci_upper)
+results_mod_adj_mi_4 <- conditions_mod_adj_mi_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper)
       # remember to add the covdistances!
 
 write_rds(results_mod_adj_mi_4, path = "Simulation study/Results/02_results_mod_adj_mi_4.rds") 
@@ -82,7 +87,7 @@ conditions_mod_adj_mi_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_10$mses, f
 
 
 # Obtaining the relevant results:
-results_mod_adj_mi_10 <- conditions_mod_adj_mi_10 %>% select(mean_mse, mse_ci_lower, mse_ci_upper)
+results_mod_adj_mi_10 <- conditions_mod_adj_mi_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper)
 
 write_rds(results_mod_adj_mi_10, path = "Simulation study/Results/02_results_mod_adj_mi_10.rds") 
 
@@ -111,7 +116,7 @@ conditions_mod_adj_mi_cv_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_cv_4$mse
 
 
 # Obtaining the relevant results:
-results_mod_adj_mi_cv_4 <- conditions_mod_adj_mi_cv_4 %>% select(mean_mse, mse_ci_lower, mse_ci_upper)
+results_mod_adj_mi_cv_4 <- conditions_mod_adj_mi_cv_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper)
 
 write_rds(results_mod_adj_mi_cv_4, path = "Simulation study/Results/02_results_mod_adj_mi_cv_4.rds") 
 
@@ -141,7 +146,7 @@ conditions_mod_adj_mi_cv_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_cv_10$m
 
 
 # Obtaining the relevant results:
-results_mod_adj_mi_cv_10 <- conditions_mod_adj_mi_cv_10 %>% select(mean_mse, mse_ci_lower, mse_ci_upper)
+results_mod_adj_mi_cv_10 <- conditions_mod_adj_mi_cv_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper)
 
 write_rds(results_mod_adj_mi_cv_10, path = "Simulation study/Results/02_results_mod_adj_mi_cv_10.rds") 
 

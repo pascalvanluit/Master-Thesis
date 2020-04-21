@@ -24,8 +24,16 @@ modindices_cv <- function(fit, model, data, k){
     test  <- data_split %>% filter(fold == i)
     
     # Creating train and test fits:
-    fit_train <- lavaan::cfa(model, train)
-    fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
+    fit_train <- try(lavaan::cfa(model, train, ...), silent = TRUE)
+    if (inherits(fit_train, "try-error"))
+      {
+      ifelse(is.atomic(fit_train) == TRUE, fit_train <- list(NA), fit_train)
+    }
+    fit_test  <- try(lavaan::cfa(model, test, start = fit_train, do.fit = FALSE, ...), silent = TRUE)
+    if (inherits(fit_test, "try-error"))
+      {
+      ifelse(is.atomic(fit_test) == TRUE, fit_test <- list(NA), fit_test)
+    }
     
     # Obtaining MI values:
     mi_test <- lavaan::modindices(fit_test, na.remove = FALSE)

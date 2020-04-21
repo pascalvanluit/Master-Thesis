@@ -1,5 +1,8 @@
 mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
   
+  # Error handling:
+  return(tryCatch({
+  
   # Saving baseline model as model:
   model <- baseline.model
   
@@ -43,7 +46,8 @@ mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
     
     # Obtaining MI values:
     MIs <- try(lavaan::modindices(fit), silent = TRUE)
-    if (inherits(MIs, "try-error")){
+    if (inherits(MIs, "try-error"))
+      {
       out3 <- list(model = model, fit = fit)
       return(out3)
     }
@@ -63,5 +67,8 @@ mod_adj_mi <- function(data, baseline.model, min.mi = 10, ...){
   
   return(out4)
   #return(final.model)
+  
+  }
+  ,error = function(e) NULL))
   
 }

@@ -1,5 +1,5 @@
 source("Methods/modindices_cv.R")
-mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
+mod_adj_mi_cv <- function(data, baseline.model, k = 5, min.mi = 10, ...){
 
   # Saving the baseline.model as model:
   model <- baseline.model
@@ -34,14 +34,20 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
     model <- paste(model, mod, sep = "\n")
 
     # Fitting model to the data:
-    fit <- lavaan::cfa(model, data, ...)
+    fit <- try(lavaan::cfa(model, data, ...), silent = TRUE)
+    if (inherits(fit, "try-error"))
+      {
+      ifelse(is.atomic(fit) == TRUE, fit <- list(NA), fit)
+      out2 <- list(model = model, fit = fit)
+      return(out2)
+    }
 
     # Obtaining MI values:
     MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
     if(inherits(MIs, "try-error"))
       {
-      out2 <- list(model = model, fit = fit)
-      return(out2)
+      out3 <- list(model = model, fit = fit)
+      return(out3)
     }
 
     # Arranging the MIs from largest to smallest:
@@ -54,49 +60,8 @@ mod_adj_mi_cv <- function(baseline.model, data, k = 5, min.mi = 10, ...){
 
   # Print the final model:
   final.model <- tail(model, 1)
-  out3 <- list(model = final.model, fit = fit)
+  out4 <- list(model = final.model, fit = fit)
   
-  return(out3)
+  return(out4)
   
   }
-
-  
-
-
- mi_cv <- function(data, model, k, iters = 1) {
-  
-  # Splitting the dataset into k groups
-  n_obs      <- nrow(data)
-  select_vec <- rep(1:k, length.out = n_obs)
-  data_split <- data %>% mutate(fold = sample(select_vec))
-  
-  # Obtaining MI values:
-  
-  # Fitting the model on the full dataset to create a space where OOS MIs can be saved:
-  fit_full <- lavaan::cfa(model, data)
-  cv_mi       <- lavaan::modindices(fit_full)
-  cv_mi[, -1:-3]  <- 0
-  
-  
-  # Loop of fitting model to training set and then to test set to get MI values:
-  for (i in 1:k) {
-    # Splitting the data:
-    train <- data_split %>% filter(fold != i)
-    test  <- data_split %>% filter(fold == i)
-    
-    # Creating train and test fits:
-    fit_train <- lavaan::cfa(model, train)
-    fit_test  <- lavaan::cfa(model, test, start = fit_train, do.fit = FALSE)
-    
-    # Obtaining MI values:
-    mi_test <- lavaan::modindices(fit_test)
-    
-    # Combining the OOS MI values:
-    cv_mi[, -1:-3] <- cv_mi[,-1:-3] + mi_test[, -1:-3]
-  }
-  
-  # Fixing up the MI output
-  cv_mi[, -1:-3] <- cv_mi[, -1:-3] / k
-  return(cv_mi)
-  
-}

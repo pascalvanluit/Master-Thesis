@@ -1,3 +1,4 @@
+library(ggplot2)
                   ###########################
                   # Script for making plots #
                   ###########################
@@ -8,7 +9,7 @@
 ##############          
 
 # Plots for mod_adj_mi_4                                    
-plot(density(unlist(mse_mod_adj_mi_4)))
+plot(density(unlist(results_mod_adj_mi_4$mean_mse)))
 plot(density(unlist(distcov_mod_adj_mi_4)))
 
 # Plots for mod_adj_mi_10
