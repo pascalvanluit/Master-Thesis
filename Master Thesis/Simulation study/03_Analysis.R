@@ -1,8 +1,10 @@
+library(xtable)
                 ###################################
                 # Script for analyzing MSE of POI #
                 ###################################
 set.seed(88)
 
+results_mod_no_adj          <- read_rds("Simulation study/Results/02_results_mod_no_adj.rds")
 results_mod_adj_mi_4        <- read_rds("Simulation study/Results/02_results_mod_adj_mi_4.rds")
 results_mod_adj_mi_10       <- read_rds("Simulation study/Results/02_results_mod_adj_mi_10.rds")
 results_mod_adj_mi_cv_4     <- read_rds("Simulation study/Results/02_results_mod_adj_mi_cv_4.rds")
@@ -10,6 +12,8 @@ results_mod_adj_mi_cv_10    <- read_rds("Simulation study/Results/02_results_mod
 results_mod_adj_chisq_cv_4  <- read_rds("Simulation study/Results/02_results_mod_adj_chisq_cv_4.rds")
 results_mod_adj_chisq_cv_10 <- read_rds("Simulation study/Results/02_results_mod_adj_chisq_cv_10.rds")
 
+
+all_results <- bind_rows(results_mod_adj_mi_4, results_mod_adj_mi_10, results_mod_adj_mi_cv_4, results_mod_adj_mi_cv_10)
 
                 
                 

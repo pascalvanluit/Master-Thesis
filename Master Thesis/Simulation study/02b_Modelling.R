@@ -9,6 +9,35 @@ library(rlist)
             # Obtaining the estimates of the Parameter of Interest # 
             ########################################################
 
+##############
+# mod_no_adj #
+##############
+
+# Using a nested lapply to obtain models:
+conditions_mod_no_adj$models <- lapply(conditions_mod_no_adj$outputs, lapply, function(x) list.extract(x, 'model'))
+
+# Using a nested lapply to obtain fits:
+conditions_mod_no_adj$fits <- lapply(conditions_mod_no_adj$outputs, lapply, function(x) list.extract(x, 'fit'))
+
+# Using a nested lapply to obtain poi estimates:
+conditions_mod_no_adj$pois <- lapply(conditions_mod_no_adj$fits, lapply, function(x) poi(x))
+
+# Using a nested lapply to obtain mse of poi estimates:
+conditions_mod_no_adj$mses <- lapply(conditions_mod_no_adj$pois, lapply, function(x) ((as.matrix(x) - conditions[,2])^2))
+
+# Using a nested lapply to obtain mean mse and CI's for each condition:
+conditions_mod_no_adj$mean_mse <- lapply(conditions_mod_no_adj$mses, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_no_adj$mse_ci_lower <- lapply(conditions_mod_no_adj$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_no_adj$mse_ci_upper <- lapply(conditions_mod_no_adj$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
+
+
+# Obtaining the relevant results:
+results_mod_no_adj <- conditions_mod_no_adj %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+
+write_rds(results_mod_no_adj, path = "Simulation study/Results/02_results_mod_no_adj.rds")
+
+
 ################
 # mod_adj_mi_4 #
 ################
