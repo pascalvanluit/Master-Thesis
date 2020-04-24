@@ -30,10 +30,27 @@ conditions_mod_no_adj$mean_mse <- lapply(conditions_mod_no_adj$mses, function(x)
 conditions_mod_no_adj$mse_ci_lower <- lapply(conditions_mod_no_adj$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
 conditions_mod_no_adj$mse_ci_upper <- lapply(conditions_mod_no_adj$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
+# Computing the modelled covariance matrices:
+conditions_mod_no_adj$covmats <- lapply(conditions_mod_no_adj$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_no_adj <- purrrlyr::by_row(conditions_mod_no_adj, create_true_covmat)
+
+# Computing the covmat distance:
+conditions_mod_no_adj$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+    distcovlist <- lapply(conditions_mod_no_adj$covmats[[i]], function(x) distcov(x$cov, conditions_mod_no_adj$.out[[i]]))
+    conditions_mod_no_adj$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_no_adj$mean_distcov <- lapply(conditions_mod_no_adj$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_no_adj$distcov_ci_lower <- lapply(conditions_mod_no_adj$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_no_adj$distcov_ci_upper <- lapply(conditions_mod_no_adj$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
 # Obtaining the relevant results:
-results_mod_no_adj <- conditions_mod_no_adj %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_no_adj <- conditions_mod_no_adj %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
 
 write_rds(results_mod_no_adj, path = "Simulation study/Results/02_results_mod_no_adj.rds")
 
@@ -61,33 +78,30 @@ conditions_mod_adj_mi_4$mse_ci_lower <- lapply(conditions_mod_adj_mi_4$mses, fun
 conditions_mod_adj_mi_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
-# Finding the estimated covmats:
-conditions_mod_adj_mi_4$covmats <- lapply(conditions_mod_adj_mi_4$fits, lapply, fitted)
-conditions_test <- conditions_mod_adj_mi_4
-conditions_test <- purrrlyr::by_row(conditions_test, create_true_covmat)
+# Computing the modelled covariance matrices:
+conditions_mod_adj_mi_4$covmats <- lapply(conditions_mod_adj_mi_4$fits, lapply, function(x) ifelse(is.na(x), return(NA), return(fitted(x))))
 
-# # Using nested lapply to obtain estimated covariance matrices:
-# conditions$covmats <- lapply(conditions$fits, lapply, fitted)
-# 
-# # Obtaining the true covmat for each condition:
-# conditions <- purrrlyr::by_row(conditions, create_true_covmat)
-# 
-# # Computing the covmat distance:
-# conditions$distcov <- vector("list", nrow(conditions))
-# for (i in 1:nrow(conditions)) {
-#   distcovlist <- lapply(conditions$covmats[[i]], function(x) distcov(x$cov, conditions$.out[[i]]))
-#   conditions$distcov[i] <- list(distcovlist)
-# }
-# 
-# # Using a nested lapply to obtain mean and CI's distcov for each condition:
-# conditions$mean_distcov <- lapply(conditions$distcov, function(x) mean(unlist(x)))
-# conditions$distcov_ci_lower <- lapply(conditions$distcov, function(x) ci(unlist(x))["CI lower"])
-# conditions$distcov_ci_upper <- lapply(conditions$distcov, function(x) ci(unlist(x))["CI upper"])
+# Computing the true covmat for each condition:
+conditions_mod_adj_mi_4 <- purrrlyr::by_row(conditions_mod_adj_mi_4, create_true_covmat)
+
+# Computing the covmat distance:
+conditions_mod_adj_mi_4$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_mi_4$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_mi_4$.out[[i]])))
+  conditions_mod_adj_mi_4$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_mi_4$mean_distcov <- lapply(conditions_mod_adj_mi_4$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_4$distcov_ci_lower <- lapply(conditions_mod_adj_mi_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_4$distcov_ci_upper <- lapply(conditions_mod_adj_mi_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
 # Obtaining the relevant results:
-results_mod_adj_mi_4 <- conditions_mod_adj_mi_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
-      # remember to add the covdistances!
+results_mod_adj_mi_4 <- conditions_mod_adj_mi_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
+
+
 
 write_rds(results_mod_adj_mi_4, path = "Simulation study/Results/02_results_mod_adj_mi_4.rds") 
 
@@ -115,8 +129,31 @@ conditions_mod_adj_mi_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_10$mses, f
 
 
 
+
+
+# Computing the modelled covariance matrices:
+conditions_mod_adj_mi_10$covmats <- lapply(conditions_mod_adj_mi_10$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_adj_mi_10 <- purrrlyr::by_row(conditions_mod_adj_mi_10, create_true_covmat)
+
+# Computing the covmat distance:
+conditions_mod_adj_mi_10$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_mi_10$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_mi_10$.out[[i]]))) 
+  conditions_mod_adj_mi_10$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_mi_10$mean_distcov <- lapply(conditions_mod_adj_mi_10$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_10$distcov_ci_lower <- lapply(conditions_mod_adj_mi_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_10$distcov_ci_upper <- lapply(conditions_mod_adj_mi_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
+
 # Obtaining the relevant results:
-results_mod_adj_mi_10 <- conditions_mod_adj_mi_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_adj_mi_10 <- conditions_mod_adj_mi_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
+
 
 write_rds(results_mod_adj_mi_10, path = "Simulation study/Results/02_results_mod_adj_mi_10.rds") 
 
@@ -143,9 +180,30 @@ conditions_mod_adj_mi_cv_4$mse_ci_lower <- lapply(conditions_mod_adj_mi_cv_4$mse
 conditions_mod_adj_mi_cv_4$mse_ci_upper <- lapply(conditions_mod_adj_mi_cv_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
+# Computing the modelled covariance matrices:
+conditions_mod_adj_mi_cv_4$covmats <- lapply(conditions_mod_adj_mi_cv_4$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_adj_mi_cv_4 <- purrrlyr::by_row(conditions_mod_adj_mi_cv_4, create_true_covmat)
+
+
+
+# Computing the covmat distance:
+conditions_mod_adj_mi_cv_4$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_mi_cv_4$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_mi_cv_4$.out[[i]]))) 
+  conditions_mod_adj_mi_cv_4$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_mi_cv_4$mean_distcov <- lapply(conditions_mod_adj_mi_cv_4$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_cv_4$distcov_ci_lower <- lapply(conditions_mod_adj_mi_cv_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_cv_4$distcov_ci_upper <- lapply(conditions_mod_adj_mi_cv_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
 
 # Obtaining the relevant results:
-results_mod_adj_mi_cv_4 <- conditions_mod_adj_mi_cv_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_adj_mi_cv_4 <- conditions_mod_adj_mi_cv_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
 
 write_rds(results_mod_adj_mi_cv_4, path = "Simulation study/Results/02_results_mod_adj_mi_cv_4.rds") 
 
@@ -173,9 +231,30 @@ conditions_mod_adj_mi_cv_10$mse_ci_lower <- lapply(conditions_mod_adj_mi_cv_10$m
 conditions_mod_adj_mi_cv_10$mse_ci_upper <- lapply(conditions_mod_adj_mi_cv_10$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
+# Computing the modelled covariance matrices:
+conditions_mod_adj_mi_cv_10$covmats <- lapply(conditions_mod_adj_mi_cv_10$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_adj_mi_cv_10 <- purrrlyr::by_row(conditions_mod_adj_mi_cv_10, create_true_covmat)
+
+
+# Computing the covmat distance:
+conditions_mod_adj_mi_cv_10$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_mi_cv_10$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_mi_cv_10$.out[[i]]))) 
+  conditions_mod_adj_mi_cv_10$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_mi_cv_10$mean_distcov <- lapply(conditions_mod_adj_mi_cv_10$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_mi_cv_10$distcov_ci_lower <- lapply(conditions_mod_adj_mi_cv_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_mi_cv_10$distcov_ci_upper <- lapply(conditions_mod_adj_mi_cv_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
 
 # Obtaining the relevant results:
-results_mod_adj_mi_cv_10 <- conditions_mod_adj_mi_cv_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_adj_mi_cv_10 <- conditions_mod_adj_mi_cv_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
+
 
 write_rds(results_mod_adj_mi_cv_10, path = "Simulation study/Results/02_results_mod_adj_mi_cv_10.rds") 
 
@@ -203,8 +282,32 @@ conditions_mod_adj_chisq_cv_4$mse_ci_lower <- lapply(conditions_mod_adj_chisq_cv
 conditions_mod_adj_chisq_cv_4$mse_ci_upper <- lapply(conditions_mod_adj_chisq_cv_4$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
+# Computing the modelled covariance matrices:
+conditions_mod_adj_chisq_cv_4$covmats <- lapply(conditions_mod_adj_chisq_cv_4$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_adj_chisq_cv_4 <- purrrlyr::by_row(conditions_mod_adj_chisq_cv_4, create_true_covmat)
+
+
+
+
+
+# Computing the covmat distance:
+conditions_mod_adj_chisq_cv_4$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_chisq_cv_4$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_chisq_cv_4$.out[[i]]))) 
+  conditions_mod_adj_chisq_cv_4$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_chisq_cv_4$mean_distcov <- lapply(conditions_mod_adj_chisq_cv_4$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_chisq_cv_4$distcov_ci_lower <- lapply(conditions_mod_adj_chisq_cv_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_chisq_cv_4$distcov_ci_upper <- lapply(conditions_mod_adj_chisq_cv_4$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
+
 # Obtaining the relevant results:
-results_mod_adj_chisq_cv_4 <- conditions_mod_adj_chisq_cv_4 %>% select(mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_adj_chisq_cv_4 <- conditions_mod_adj_chisq_cv_4 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
 
 write_rds(results_mod_adj_chisq_cv_4, path = "Simulation study/Results/02_results_mod_adj_chisq_cv_4.rds") 
 
@@ -231,7 +334,32 @@ conditions_mod_adj_chisq_cv_10$mse_ci_lower <- lapply(conditions_mod_adj_chisq_c
 conditions_mod_adj_chisq_cv_10$mse_ci_upper <- lapply(conditions_mod_adj_chisq_cv_10$mses, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
 
 
+# Computing the modelled covariance matrices:
+conditions_mod_adj_chisq_cv_10$covmats <- lapply(conditions_mod_adj_chisq_cv_10$fits, lapply, fitted)
+
+# Computing the true covmat for each condition:
+conditions_mod_adj_chisq_cv_10 <- purrrlyr::by_row(conditions_mod_adj_chisq_cv_10, create_true_covmat)
+
+
+
+
+
+# Computing the covmat distance:
+conditions_mod_adj_chisq_cv_10$distcov <- vector("list", nrow(conditions))
+for (i in 1:nrow(conditions)) {
+  distcovlist <- lapply(conditions_mod_adj_chisq_cv_10$covmats[[i]], function(x) ifelse(is.na(x), return(NA), distcov(x$cov, conditions_mod_adj_chisq_cv_10$.out[[i]])))
+  conditions_mod_adj_chisq_cv_10$distcov[i] <- list(distcovlist)
+}
+
+# Using a nested lapply to obtain mean and CI's distcov for each condition:
+conditions_mod_adj_chisq_cv_10$mean_distcov <- lapply(conditions_mod_adj_chisq_cv_10$distcov, function(x) mean(unlist(x), na.rm = TRUE))
+conditions_mod_adj_chisq_cv_10$distcov_ci_lower <- lapply(conditions_mod_adj_chisq_cv_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI lower"])
+conditions_mod_adj_chisq_cv_10$distcov_ci_upper <- lapply(conditions_mod_adj_chisq_cv_10$distcov, function(x) ci(unlist(x), na.rm = TRUE)["CI upper"])
+
+
 # Obtaining the relevant results:
-results_mod_adj_chisq_cv_10 <- conditions_mod_adj_chisq_cv_10 %>% select(mean_mse, mse_ci_lower, mse_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper))
+results_mod_adj_chisq_cv_10 <- conditions_mod_adj_chisq_cv_10 %>% select(lambda, rho, delta, n, mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper) %>% unnest(cols = c(mean_mse, mse_ci_lower, mse_ci_upper, mean_distcov, distcov_ci_lower, distcov_ci_upper))
+
+
 
 write_rds(results_mod_adj_chisq_cv_10, path = "Simulation study/Results/02_results_mod_adj_chisq_cv_10.rds")

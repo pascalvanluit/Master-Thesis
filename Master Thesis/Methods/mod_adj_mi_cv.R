@@ -8,12 +8,13 @@ mod_adj_mi_cv <- function(data, baseline.model, k = 5, min.mi = 10, ...){
   fit <- lavaan::cfa(model, data, ...)
   
   # Obtaining MI values:
-  MIs <- try(modindices_cv(fit, model, data, k), silent = TRUE)
-  if(inherits(MIs, "try-error"))
-    {
-    out1 <- list(model = model, fit = fit)
-    return(out1)
-  }
+  MIs <- modindices_cv(fit, model, data, k)
+  #   try(modindices_cv(fit, model, data, k), silent = TRUE)
+  # if(inherits(MIs, "try-error"))
+  #   {
+  #   out1 <- list(model = model, fit = fit)
+  #   return(out1)
+  # }
   
   # Arranging the MIs from largest to smallest:
   MIs <- MIs %>% arrange(-mi)
@@ -30,6 +31,8 @@ mod_adj_mi_cv <- function(data, baseline.model, k = 5, min.mi = 10, ...){
     # Obtaining the modification to be added to the model:
     mod <- paste(MIs[1, 1], MIs[1, 2], MIs[1, 3], sep = " ")
 
+    # print("adding a modification")
+    
     # Adding the modification to the model:
     model <- paste(model, mod, sep = "\n")
 
@@ -64,4 +67,4 @@ mod_adj_mi_cv <- function(data, baseline.model, k = 5, min.mi = 10, ...){
   
   return(out4)
   
-  }
+}
