@@ -5,6 +5,18 @@ library(shapes)
 library(purrrlyr)
 library(rlist)
 
+# Loading the conditions rds files:
+conditions_mod_no_adj          <- read_rds("Simulation study/Outputs/02_conditions_mod_no_adj.rds")
+conditions_mod_adj_mi_4        <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_mi_4")
+conditions_mod_adj_mi_10       <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_mi_10")
+conditions_mod_adj_mi_cv_4     <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_mi_cv_4")
+conditions_mod_adj_mi_cv_10    <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_mi_cv_10")
+conditions_mod_adj_chisq_cv_4  <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_chisq_cv_4")
+conditions_mod_adj_chisq_cv_10 <- read_rds("Simulation study/Outputs/02_conditions_mod_adj_chisq_cv_10")
+
+
+
+
             ########################################################
             # Obtaining the estimates of the Parameter of Interest # 
             ########################################################
